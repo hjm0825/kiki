@@ -1,0 +1,674 @@
+{
+  "version": "0.2.0-rc.2",
+  "source_commit": "a380efcdeefe53f69b291f101de938dfd68cbcf0",
+  "branch": "hutools",
+  "date": "2026-11-17",
+  "source_archive": "HuTools-0.2.0-rc.2-full.zip",
+  "source_archive_sha256": "a109a5058561b56ed07c7bd8605fc3e6e6ae74c6d119df4ea4aef94957c975b5",
+  "source_archive_bytes": 1285096,
+  "git_payload_files_verified": 72,
+  "extracted_bundle_check": {
+    "ok": true,
+    "errors": []
+  },
+  "extracted_task_status": {
+    "state": {
+      "schema_version": 1,
+      "project_root": "../..",
+      "spec": {
+        "task_id": "HUTOOLS-B02-20261117",
+        "rules_version": "0.2.0-rc.1",
+        "source_version": "e24d618bbfe5b2c487c2e3ce9b1443cfecbce758 + B02-M05/M07 rc.2 manifest compatibility fix",
+        "author": "b02-implementation-team",
+        "requirements": [
+          "package",
+          "functional",
+          "independent-review",
+          "host-install"
+        ],
+        "inputs": [
+          "plugins/hutools/AGENTS.md",
+          "plugins/hutools/LICENSE",
+          "plugins/hutools/THIRD_PARTY_NOTICES.md",
+          "plugins/hutools/hooks/README.md",
+          "plugins/hutools/hooks/guard.py",
+          "plugins/hutools/hooks/hooks.json",
+          "plugins/hutools/licenses/mattpocock-MIT.txt",
+          "plugins/hutools/.codex-plugin/plugin.json",
+          "plugins/hutools/skills/code-review/SKILL.md",
+          "plugins/hutools/skills/codebase-design/SKILL.md",
+          "plugins/hutools/skills/diagnosing-bugs/SKILL.md",
+          "plugins/hutools/skills/domain-modeling/SKILL.md",
+          "plugins/hutools/skills/grill-with-docs/SKILL.md",
+          "plugins/hutools/skills/grilling/SKILL.md",
+          "plugins/hutools/skills/hutools/SKILL.md",
+          "plugins/hutools/skills/hutools/agents/openai.yaml",
+          "plugins/hutools/skills/hutools/assets/problem-report.md",
+          "plugins/hutools/skills/hutools/assets/project-context.md",
+          "plugins/hutools/skills/hutools/assets/task.md",
+          "plugins/hutools/skills/hutools/references/analysis.md",
+          "plugins/hutools/skills/hutools/references/development.md",
+          "plugins/hutools/skills/hutools/references/intake.md",
+          "plugins/hutools/skills/hutools/references/materials.md",
+          "plugins/hutools/skills/hutools/references/observation.md",
+          "plugins/hutools/skills/hutools/references/roles.md",
+          "plugins/hutools/skills/hutools/references/rule-map.md",
+          "plugins/hutools/skills/hutools/references/rules.md",
+          "plugins/hutools/skills/research/SKILL.md",
+          "plugins/hutools/skills/tdd/SKILL.md",
+          "plugins/hutools/sources.lock.json",
+          "plugins/hutools/tools/lifecycle.md",
+          "plugins/hutools/tools/lifecycle.py",
+          "plugins/hutools/tools/workflow.md",
+          "plugins/hutools/tools/workflow.py",
+          "scripts/check_bundle.py",
+          "tests/test_bundle.py",
+          "tests/test_guard.py",
+          "tests/test_lifecycle.py",
+          "tests/test_workflow.py"
+        ],
+        "writable_paths": [
+          "validation/b02"
+        ],
+        "requires_independent_review": true,
+        "cases": [
+          {
+            "id": "bundle",
+            "requirement": "package",
+            "kind": "command",
+            "argv": [
+              "python3",
+              "-B",
+              "scripts/check_bundle.py"
+            ],
+            "timeout_seconds": 30
+          },
+          {
+            "id": "tests",
+            "requirement": "functional",
+            "kind": "command",
+            "argv": [
+              "python3",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests",
+              "-v"
+            ],
+            "timeout_seconds": 60
+          },
+          {
+            "id": "review",
+            "requirement": "independent-review",
+            "kind": "review"
+          },
+          {
+            "id": "host-install",
+            "requirement": "host-install",
+            "kind": "manual"
+          }
+        ]
+      },
+      "status": "paused",
+      "approval": {
+        "actor": "user",
+        "decision": "Existing explicit B02-M05/M07 approval call_398f9b6672234def9e9fc388bce9b091: compatible packaging repair and isolated tests; no publication/install/trust granted for new candidate",
+        "at": "2026-11-17T10:41:42.374669+00:00",
+        "spec_sha256": "ab3d5f182b9168ce25e735656d7237beac3051cca542cadd72cffe58ce102e30",
+        "trust": "recorded_external_decision"
+      },
+      "events": [
+        {
+          "at": "2026-11-17T10:12:06.526272+00:00",
+          "type": "created"
+        },
+        {
+          "at": "2026-11-17T10:12:06.528429+00:00",
+          "type": "approved",
+          "actor": "user",
+          "decision": "B02 batch confirmation call_398f9b6672234def9e9fc388bce9b091"
+        },
+        {
+          "at": "2026-11-17T10:12:06.530480+00:00",
+          "type": "transition",
+          "previous": "approved",
+          "target": "running",
+          "reason": "已批准范围内整合验收"
+        },
+        {
+          "at": "2026-11-17T10:12:06.671378+00:00",
+          "type": "check",
+          "case_id": "bundle",
+          "evidence_id": "c0171cbb11304423bf34f87b8a7d2c70",
+          "outcome": "pass"
+        },
+        {
+          "at": "2026-11-17T10:12:10.795440+00:00",
+          "type": "check",
+          "case_id": "tests",
+          "evidence_id": "29cab2fb6ed34be682e83619d74352d3",
+          "outcome": "pass"
+        },
+        {
+          "at": "2026-11-17T10:13:11.338469+00:00",
+          "type": "attestation",
+          "case_id": "review",
+          "evidence_id": "f3d7923792dd4686ab4321ffc16f8d97",
+          "actor": "independent-review-agents"
+        },
+        {
+          "at": "2026-11-17T10:13:11.340823+00:00",
+          "type": "transition",
+          "previous": "running",
+          "target": "paused",
+          "reason": "等待用户审阅候选并完成目标客户端安装/hook信任与实测；本机源码验证完成"
+        },
+        {
+          "at": "2026-11-17T10:16:24.362234+00:00",
+          "type": "spec_revised",
+          "reason": "分发态核验发现目录输入包含未跟踪Python缓存；实际源码字节全部相同。改为完整Git交付源码/规则/测试精确清单，不改需求或验收判据；原证据及旧规格保留。",
+          "previous_spec": {
+            "task_id": "HUTOOLS-B02-20261117",
+            "rules_version": "0.2.0-rc.1",
+            "source_version": "eb8c6a9+B02-approved-candidate",
+            "author": "b02-implementation-team",
+            "requirements": [
+              "package",
+              "functional",
+              "independent-review",
+              "host-install"
+            ],
+            "inputs": [
+              "plugins/hutools",
+              "scripts",
+              "tests"
+            ],
+            "writable_paths": [
+              "validation/b02"
+            ],
+            "requires_independent_review": true,
+            "cases": [
+              {
+                "id": "bundle",
+                "requirement": "package",
+                "kind": "command",
+                "argv": [
+                  "python3",
+                  "-B",
+                  "scripts/check_bundle.py"
+                ],
+                "timeout_seconds": 30
+              },
+              {
+                "id": "tests",
+                "requirement": "functional",
+                "kind": "command",
+                "argv": [
+                  "python3",
+                  "-B",
+                  "-m",
+                  "unittest",
+                  "discover",
+                  "-s",
+                  "tests",
+                  "-v"
+                ],
+                "timeout_seconds": 60
+              },
+              {
+                "id": "review",
+                "requirement": "independent-review",
+                "kind": "review"
+              },
+              {
+                "id": "host-install",
+                "requirement": "host-install",
+                "kind": "manual"
+              }
+            ]
+          },
+          "previous_approval": {
+            "actor": "user",
+            "decision": "B02 batch confirmation call_398f9b6672234def9e9fc388bce9b091",
+            "at": "2026-11-17T10:12:06.528385+00:00",
+            "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c",
+            "trust": "recorded_external_decision"
+          }
+        },
+        {
+          "at": "2026-11-17T10:16:24.372640+00:00",
+          "type": "approved",
+          "actor": "user",
+          "decision": "原B02批准范围内的输入身份修正；不包含可重建缓存，无需求/验收条件变化"
+        },
+        {
+          "at": "2026-11-17T10:16:24.375037+00:00",
+          "type": "transition",
+          "previous": "approved",
+          "target": "running",
+          "reason": "实际分发态身份修正后的重验"
+        },
+        {
+          "at": "2026-11-17T10:16:24.524454+00:00",
+          "type": "check",
+          "case_id": "bundle",
+          "evidence_id": "07aacfe3f3bd460e88931346d2c16dd7",
+          "outcome": "pass"
+        },
+        {
+          "at": "2026-11-17T10:16:28.555504+00:00",
+          "type": "check",
+          "case_id": "tests",
+          "evidence_id": "958c1cef9ac04079b2131e391c5462ca",
+          "outcome": "pass"
+        },
+        {
+          "at": "2026-11-17T10:16:28.570933+00:00",
+          "type": "attestation",
+          "case_id": "review",
+          "evidence_id": "a08d52efe06a4a44b446ebf71176a1a2",
+          "actor": "independent-review-agents"
+        },
+        {
+          "at": "2026-11-17T10:16:28.573295+00:00",
+          "type": "transition",
+          "previous": "running",
+          "target": "paused",
+          "reason": "待目标客户端安装、信任与实际拒绝验收"
+        },
+        {
+          "at": "2026-11-17T10:41:42.371701+00:00",
+          "type": "spec_revision",
+          "reason": "B02-M05/M07 approved-scope hook discovery compatibility fix; preserve rc.1 failure and prior evidence",
+          "previous_spec": {
+            "task_id": "HUTOOLS-B02-20261117",
+            "rules_version": "0.2.0-rc.1",
+            "source_version": "9bddb36280860d3702689493309e4ba366de3292 (source files unchanged)",
+            "author": "b02-implementation-team",
+            "requirements": [
+              "package",
+              "functional",
+              "independent-review",
+              "host-install"
+            ],
+            "inputs": [
+              "plugins/hutools/AGENTS.md",
+              "plugins/hutools/LICENSE",
+              "plugins/hutools/THIRD_PARTY_NOTICES.md",
+              "plugins/hutools/hooks/README.md",
+              "plugins/hutools/hooks/guard.py",
+              "plugins/hutools/hooks/hooks.json",
+              "plugins/hutools/licenses/mattpocock-MIT.txt",
+              "plugins/hutools/plugin.json",
+              "plugins/hutools/skills/code-review/SKILL.md",
+              "plugins/hutools/skills/codebase-design/SKILL.md",
+              "plugins/hutools/skills/diagnosing-bugs/SKILL.md",
+              "plugins/hutools/skills/domain-modeling/SKILL.md",
+              "plugins/hutools/skills/grill-with-docs/SKILL.md",
+              "plugins/hutools/skills/grilling/SKILL.md",
+              "plugins/hutools/skills/hutools/SKILL.md",
+              "plugins/hutools/skills/hutools/agents/openai.yaml",
+              "plugins/hutools/skills/hutools/assets/problem-report.md",
+              "plugins/hutools/skills/hutools/assets/project-context.md",
+              "plugins/hutools/skills/hutools/assets/task.md",
+              "plugins/hutools/skills/hutools/references/analysis.md",
+              "plugins/hutools/skills/hutools/references/development.md",
+              "plugins/hutools/skills/hutools/references/intake.md",
+              "plugins/hutools/skills/hutools/references/materials.md",
+              "plugins/hutools/skills/hutools/references/observation.md",
+              "plugins/hutools/skills/hutools/references/roles.md",
+              "plugins/hutools/skills/hutools/references/rule-map.md",
+              "plugins/hutools/skills/hutools/references/rules.md",
+              "plugins/hutools/skills/research/SKILL.md",
+              "plugins/hutools/skills/tdd/SKILL.md",
+              "plugins/hutools/sources.lock.json",
+              "plugins/hutools/tools/lifecycle.md",
+              "plugins/hutools/tools/lifecycle.py",
+              "plugins/hutools/tools/workflow.md",
+              "plugins/hutools/tools/workflow.py",
+              "scripts/check_bundle.py",
+              "tests/test_bundle.py",
+              "tests/test_guard.py",
+              "tests/test_lifecycle.py",
+              "tests/test_workflow.py"
+            ],
+            "writable_paths": [
+              "validation/b02"
+            ],
+            "requires_independent_review": true,
+            "cases": [
+              {
+                "id": "bundle",
+                "requirement": "package",
+                "kind": "command",
+                "argv": [
+                  "python3",
+                  "-B",
+                  "scripts/check_bundle.py"
+                ],
+                "timeout_seconds": 30
+              },
+              {
+                "id": "tests",
+                "requirement": "functional",
+                "kind": "command",
+                "argv": [
+                  "python3",
+                  "-B",
+                  "-m",
+                  "unittest",
+                  "discover",
+                  "-s",
+                  "tests",
+                  "-v"
+                ],
+                "timeout_seconds": 60
+              },
+              {
+                "id": "review",
+                "requirement": "independent-review",
+                "kind": "review"
+              },
+              {
+                "id": "host-install",
+                "requirement": "host-install",
+                "kind": "manual"
+              }
+            ]
+          },
+          "previous_approval": {
+            "actor": "user",
+            "decision": "原B02批准范围内的输入身份修正；不包含可重建缓存，无需求/验收条件变化",
+            "at": "2026-11-17T10:16:24.372573+00:00",
+            "spec_sha256": "4cec9f0ddedf8689feb9b6c931ca9706d0868dc313585e332da0f17d6d060d55",
+            "trust": "recorded_external_decision"
+          }
+        },
+        {
+          "at": "2026-11-17T10:41:42.374767+00:00",
+          "type": "approved",
+          "actor": "user",
+          "decision": "Existing explicit B02-M05/M07 approval call_398f9b6672234def9e9fc388bce9b091: compatible packaging repair and isolated tests; no publication/install/trust granted for new candidate"
+        },
+        {
+          "at": "2026-11-17T10:41:42.378877+00:00",
+          "type": "transition",
+          "previous": "approved",
+          "target": "running",
+          "reason": "Revalidate rc.2 packaging repair with fresh input fingerprints"
+        },
+        {
+          "at": "2026-11-17T10:41:54.468254+00:00",
+          "type": "check",
+          "case_id": "bundle",
+          "evidence_id": "b34f14f813a14df1946a91716502f81a",
+          "outcome": "pass"
+        },
+        {
+          "at": "2026-11-17T10:41:59.764878+00:00",
+          "type": "check",
+          "case_id": "tests",
+          "evidence_id": "63f2f2776a98446a80e83566a1149292",
+          "outcome": "pass"
+        },
+        {
+          "at": "2026-11-17T10:45:05.130287+00:00",
+          "type": "attestation",
+          "case_id": "review",
+          "evidence_id": "98518bc7cd8b4c1da7b76d323f43aa87",
+          "actor": "hook_compat_review"
+        },
+        {
+          "at": "2026-11-17T10:45:05.140185+00:00",
+          "type": "transition",
+          "previous": "running",
+          "target": "paused",
+          "reason": "rc.2 local repair validated; publish/update and manual hook trust/runtime enforcement pending"
+        },
+        {
+          "at": "2026-11-17T10:48:30.751735+00:00",
+          "type": "transition",
+          "previous": "paused",
+          "target": "running",
+          "reason": "Append independently reviewed complete plan and handoff evidence"
+        },
+        {
+          "at": "2026-11-17T10:48:30.769735+00:00",
+          "type": "attestation",
+          "case_id": "review",
+          "evidence_id": "293fc5c7778048c1ad118b574f153508",
+          "actor": "hook_compat_review"
+        },
+        {
+          "at": "2026-11-17T10:48:30.772691+00:00",
+          "type": "transition",
+          "previous": "running",
+          "target": "paused",
+          "reason": "Local rc.2 repair and full handoff prepared; host-install missing"
+        }
+      ],
+      "evidence": [
+        {
+          "id": "c0171cbb11304423bf34f87b8a7d2c70",
+          "at": "2026-11-17T10:12:06.671252+00:00",
+          "case_id": "bundle",
+          "kind": "command",
+          "collector": "run-check",
+          "actor": "b02-implementation-team",
+          "outcome": "pass",
+          "returncode": 0,
+          "reason": "exit",
+          "argv": [
+            "python3",
+            "-B",
+            "scripts/check_bundle.py"
+          ],
+          "duration_seconds": 0.111449,
+          "output_limit_bytes": 1048576,
+          "artifact": "validation/b02/task-evidence/085db315542548d4b6f4208b74230f8d.log",
+          "artifact_sha256": "9bf5d597ef1cce6c355e1727229cc29f9433e59b89ec5ce3fdd64387b7217581",
+          "input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+          "after_input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+          "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c"
+        },
+        {
+          "id": "29cab2fb6ed34be682e83619d74352d3",
+          "at": "2026-11-17T10:12:10.795319+00:00",
+          "case_id": "tests",
+          "kind": "command",
+          "collector": "run-check",
+          "actor": "b02-implementation-team",
+          "outcome": "pass",
+          "returncode": 0,
+          "reason": "exit",
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "tests",
+            "-v"
+          ],
+          "duration_seconds": 4.087691,
+          "output_limit_bytes": 1048576,
+          "artifact": "validation/b02/task-evidence/2b1fdaac1da447c98ede4399a7aa14c2.log",
+          "artifact_sha256": "7a0afff24b9893a4deb3116665eff08d31488152ea1e51150d4dc8e869f75817",
+          "input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+          "after_input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+          "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c"
+        },
+        {
+          "id": "f3d7923792dd4686ab4321ffc16f8d97",
+          "at": "2026-11-17T10:13:11.325690+00:00",
+          "case_id": "review",
+          "kind": "review",
+          "collector": "human-attestation",
+          "actor": "independent-review-agents",
+          "outcome": "pass",
+          "statement": "独立反例复核关闭已知P1/P2；范围及限制见报告",
+          "artifact": "validation/b02/review.md",
+          "artifact_sha256": "2291b7bb00189e23fd83f9dee6366f1de3c614d975331ada7809bec9afbf34d4",
+          "input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+          "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c"
+        },
+        {
+          "id": "07aacfe3f3bd460e88931346d2c16dd7",
+          "at": "2026-11-17T10:16:24.524321+00:00",
+          "case_id": "bundle",
+          "kind": "command",
+          "collector": "run-check",
+          "actor": "b02-implementation-team",
+          "outcome": "pass",
+          "returncode": 0,
+          "reason": "exit",
+          "argv": [
+            "python3",
+            "-B",
+            "scripts/check_bundle.py"
+          ],
+          "duration_seconds": 0.119144,
+          "output_limit_bytes": 1048576,
+          "artifact": "validation/b02/task-evidence/6dc3b162ac6649248e5b88f5fb40f000.log",
+          "artifact_sha256": "9bf5d597ef1cce6c355e1727229cc29f9433e59b89ec5ce3fdd64387b7217581",
+          "input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+          "after_input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+          "spec_sha256": "4cec9f0ddedf8689feb9b6c931ca9706d0868dc313585e332da0f17d6d060d55"
+        },
+        {
+          "id": "958c1cef9ac04079b2131e391c5462ca",
+          "at": "2026-11-17T10:16:28.555364+00:00",
+          "case_id": "tests",
+          "kind": "command",
+          "collector": "run-check",
+          "actor": "b02-implementation-team",
+          "outcome": "pass",
+          "returncode": 0,
+          "reason": "exit",
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "tests",
+            "-v"
+          ],
+          "duration_seconds": 3.993805,
+          "output_limit_bytes": 1048576,
+          "artifact": "validation/b02/task-evidence/83d692132a36446e935cc9ddca3d6178.log",
+          "artifact_sha256": "81126ac1ee61c5bdd1998307f6ca4e0314c2e08e9ebdeec2227916fa1bb52fb8",
+          "input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+          "after_input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+          "spec_sha256": "4cec9f0ddedf8689feb9b6c931ca9706d0868dc313585e332da0f17d6d060d55"
+        },
+        {
+          "id": "a08d52efe06a4a44b446ebf71176a1a2",
+          "at": "2026-11-17T10:16:28.558395+00:00",
+          "case_id": "review",
+          "kind": "review",
+          "collector": "human-attestation",
+          "actor": "independent-review-agents",
+          "outcome": "pass",
+          "statement": "独立审查原源码全部字节相同；仅移除未跟踪缓存的证据输入，复用实际审查范围",
+          "artifact": "validation/b02/review.md",
+          "artifact_sha256": "2291b7bb00189e23fd83f9dee6366f1de3c614d975331ada7809bec9afbf34d4",
+          "input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+          "spec_sha256": "4cec9f0ddedf8689feb9b6c931ca9706d0868dc313585e332da0f17d6d060d55"
+        },
+        {
+          "id": "b34f14f813a14df1946a91716502f81a",
+          "at": "2026-11-17T10:41:54.468059+00:00",
+          "case_id": "bundle",
+          "kind": "command",
+          "collector": "run-check",
+          "actor": "b02-implementation-team",
+          "outcome": "pass",
+          "returncode": 0,
+          "reason": "exit",
+          "argv": [
+            "python3",
+            "-B",
+            "scripts/check_bundle.py"
+          ],
+          "duration_seconds": 0.127136,
+          "output_limit_bytes": 1048576,
+          "artifact": "validation/b02/task-evidence/777b5daeb7cb40119fe61a4b282de28b.log",
+          "artifact_sha256": "9bf5d597ef1cce6c355e1727229cc29f9433e59b89ec5ce3fdd64387b7217581",
+          "input_sha256": "12a321a8eb77ad24c000de78b5065ed9a6246cf8d47c4a29dc30c512f05c50e6",
+          "after_input_sha256": "12a321a8eb77ad24c000de78b5065ed9a6246cf8d47c4a29dc30c512f05c50e6",
+          "spec_sha256": "ab3d5f182b9168ce25e735656d7237beac3051cca542cadd72cffe58ce102e30"
+        },
+        {
+          "id": "63f2f2776a98446a80e83566a1149292",
+          "at": "2026-11-17T10:41:59.764720+00:00",
+          "case_id": "tests",
+          "kind": "command",
+          "collector": "run-check",
+          "actor": "b02-implementation-team",
+          "outcome": "pass",
+          "returncode": 0,
+          "reason": "exit",
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "tests",
+            "-v"
+          ],
+          "duration_seconds": 5.190637,
+          "output_limit_bytes": 1048576,
+          "artifact": "validation/b02/task-evidence/a7583832aa1e4fc8adbfe4dbd445232d.log",
+          "artifact_sha256": "b1b6f0ec6a6feb4c879f73024c4c20ae03f7e5a8b14c1db063aabb43302f3b47",
+          "input_sha256": "12a321a8eb77ad24c000de78b5065ed9a6246cf8d47c4a29dc30c512f05c50e6",
+          "after_input_sha256": "12a321a8eb77ad24c000de78b5065ed9a6246cf8d47c4a29dc30c512f05c50e6",
+          "spec_sha256": "ab3d5f182b9168ce25e735656d7237beac3051cca542cadd72cffe58ce102e30"
+        },
+        {
+          "id": "98518bc7cd8b4c1da7b76d323f43aa87",
+          "at": "2026-11-17T10:45:05.116598+00:00",
+          "case_id": "review",
+          "kind": "review",
+          "collector": "human-attestation",
+          "actor": "hook_compat_review",
+          "outcome": "pass",
+          "statement": "Independent manifest compatibility diff review and 15 package tests passed; runtime trust/deny remains pending",
+          "artifact": "validation/b02/review.md",
+          "artifact_sha256": "c5192645f521b24e2b519ce128a4d4d8352597c6b15f31a7540c31312315f19e",
+          "input_sha256": "12a321a8eb77ad24c000de78b5065ed9a6246cf8d47c4a29dc30c512f05c50e6",
+          "spec_sha256": "ab3d5f182b9168ce25e735656d7237beac3051cca542cadd72cffe58ce102e30"
+        },
+        {
+          "id": "293fc5c7778048c1ad118b574f153508",
+          "at": "2026-11-17T10:48:30.756437+00:00",
+          "case_id": "review",
+          "kind": "review",
+          "collector": "human-attestation",
+          "actor": "hook_compat_review",
+          "outcome": "pass",
+          "statement": "Independent code/package review plus complete Q1-Q26/D01-D17 documentation audit; native trust/enforcement remains pending",
+          "artifact": "validation/b02/review.md",
+          "artifact_sha256": "8439a31898135a87d6a08d1431a230be24ae6a41370636aa0dd1a4bb3a87f4ba",
+          "input_sha256": "12a321a8eb77ad24c000de78b5065ed9a6246cf8d47c4a29dc30c512f05c50e6",
+          "spec_sha256": "ab3d5f182b9168ce25e735656d7237beac3051cca542cadd72cffe58ce102e30"
+        }
+      ],
+      "created_at": "2026-11-17T10:12:06.526268+00:00",
+      "updated_at": "2026-11-17T10:48:30.772761+00:00"
+    },
+    "effective_status": "paused",
+    "completion_errors": [
+      "host-install 缺少证据"
+    ]
+  },
+  "supporting_archive": "HuTools-supporting-materials-20261117.zip",
+  "supporting_archive_sha256": "3df2328d1f8a4237f193dfd9876f8f56968d0bb2c0d4f2b1f016d7bdfe61bd99",
+  "scope": "Complete source/docs/tests/state plus exact temporary supporting materials; host trust/enforcement remains pending"
+}
