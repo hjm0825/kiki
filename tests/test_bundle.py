@@ -42,6 +42,16 @@ class BundleTests(unittest.TestCase):
         self.assertTrue(json.loads(result.stdout)["ok"])
         self.assertFalse(self.root.exists())
 
+    def test_missing_codex_manifest_fails(self):
+        (self.plugin / ".codex-plugin/plugin.json").unlink(missing_ok=True)
+        self.assertTrue(any(".codex-plugin/plugin.json" in e for e in self.errors()))
+
+    def test_portable_manifest_shadowing_hooks_fails(self):
+        portable = self.plugin / "plugin.json"
+        if not portable.exists():
+            portable.write_text(json.dumps({"name": "hutools", "version": "0.2.0-rc.2"}))
+        self.assertTrue(any("portable" in e for e in self.errors()))
+
     def test_missing_runtime_guard_fails(self):
         (self.plugin / "hooks/guard.py").unlink()
         self.assertTrue(any("guard.py" in e for e in self.errors()))
@@ -106,7 +116,7 @@ class BundleTests(unittest.TestCase):
         self.assertTrue(any("重复" in e for e in self.errors()))
 
     def test_invalid_manifest_returns_actionable_cli_failure(self):
-        (self.plugin / "plugin.json").write_text("{broken")
+        (self.plugin / ".codex-plugin/plugin.json").write_text("{broken")
         result = subprocess.run(
             [sys.executable, str(self.root / "scripts/check_bundle.py")],
             capture_output=True, text=True, timeout=10,

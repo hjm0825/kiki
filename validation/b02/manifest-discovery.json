@@ -1,0 +1,32 @@
+{
+  "host": "codex-cli 0.155.1",
+  "date": "2026-11-17",
+  "method": "plugin/read on isolated packages; no install, trust or hook execution",
+  "results": [
+    {
+      "variant": "portable",
+      "error": null,
+      "hooks": [],
+      "version": "0.2.0-rc.1"
+    },
+    {
+      "variant": "compat",
+      "error": null,
+      "hooks": [
+        {
+          "key": "hutools@hutools:hooks/hooks.json:pre_tool_use:0:0",
+          "eventName": "preToolUse"
+        },
+        {
+          "key": "hutools@hutools:hooks/hooks.json:session_start:0:0",
+          "eventName": "sessionStart"
+        },
+        {
+          "key": "hutools@hutools:hooks/hooks.json:stop:0:0",
+          "eventName": "stop"
+        }
+      ],
+      "version": "0.2.0-rc.1"
+    }
+  ]
+}

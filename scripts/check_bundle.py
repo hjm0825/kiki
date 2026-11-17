@@ -87,7 +87,10 @@ def validate(root):
     if entry.get("category") != "Productivity":
         errors.append("marketplace.category 应为 Productivity")
 
-    manifest = read_json(plugin / "plugin.json")
+    # 当前宿主跳过 AgentPlugin 格式的 hooks；根 manifest 会优先于兼容格式。
+    if (plugin / "plugin.json").exists():
+        errors.append("portable plugin.json 会遮蔽本版 Codex hooks 兼容入口")
+    manifest = read_json(plugin / ".codex-plugin/plugin.json")
     if manifest.get("name") != "hutools":
         errors.append("plugin.json 名称必须为 hutools")
     version = manifest.get("version", "")
@@ -95,11 +98,7 @@ def validate(root):
         errors.append("plugin.json 版本无效")
     if manifest.get("license") != "MIT":
         errors.append("plugin.json 自有内容许可必须为 MIT")
-    extensions = manifest.get("extensions", {})
-    overlay = extensions.get("com.openai", {}) if isinstance(extensions, dict) else {}
-    if not isinstance(overlay, dict):
-        overlay = {}
-        errors.append("plugin.json OpenAI 设置必须为对象")
+    overlay = manifest
     interface = overlay.get("interface", {})
     if not isinstance(interface, dict) or interface.get("displayName") != "HuTools":
         errors.append("plugin.json 展示名称必须为 HuTools")

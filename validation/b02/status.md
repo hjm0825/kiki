@@ -2,7 +2,7 @@
 
 状态：paused
 规则版本：0.2.0-rc.1
-来源版本：9bddb36280860d3702689493309e4ba366de3292 (source files unchanged)
+来源版本：e24d618bbfe5b2c487c2e3ce9b1443cfecbce758 + B02-M05/M07 rc.2 manifest compatibility fix
 
 本报告是任务状态的阅读视图；人工证据与授权仍需核对真实来源。
 

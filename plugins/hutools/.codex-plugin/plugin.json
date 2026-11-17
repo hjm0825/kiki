@@ -1,0 +1,34 @@
+{
+  "name": "hutools",
+  "version": "0.2.0-rc.2",
+  "description": "HuTools 工程协作：轻量接入、研发闭环、独立验证、资料管理与受控调用检查。",
+  "author": {
+    "name": "hjm0825"
+  },
+  "repository": "https://github.com/hjm0825/kiki",
+  "homepage": "https://github.com/hjm0825/kiki/tree/hutools",
+  "license": "MIT",
+  "keywords": [
+    "engineering",
+    "research",
+    "diagnosis"
+  ],
+  "onboardingSkill": "./skills/hutools/SKILL.md",
+  "interface": {
+    "displayName": "HuTools",
+    "shortDescription": "从运行开始，讨论需求、分析问题并输出清晰报告",
+    "longDescription": "自带9个技能与团队规则；确认资料库后按任务检查。支持获批开发、测试与资料管理；hooks需宿主审阅信任，保护范围以实测为准。",
+    "developerName": "hjm0825",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "运行 HuTools",
+      "用 HuTools 分析项目问题",
+      "用 HuTools 讨论开发需求"
+    ]
+  },
+  "hooks": "./hooks/hooks.json"
+}

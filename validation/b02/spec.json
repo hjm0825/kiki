@@ -1,7 +1,7 @@
 {
   "task_id": "HUTOOLS-B02-20261117",
   "rules_version": "0.2.0-rc.1",
-  "source_version": "9bddb36280860d3702689493309e4ba366de3292 (source files unchanged)",
+  "source_version": "e24d618bbfe5b2c487c2e3ce9b1443cfecbce758 + B02-M05/M07 rc.2 manifest compatibility fix",
   "author": "b02-implementation-team",
   "requirements": [
     "package",
@@ -17,7 +17,7 @@
     "plugins/hutools/hooks/guard.py",
     "plugins/hutools/hooks/hooks.json",
     "plugins/hutools/licenses/mattpocock-MIT.txt",
-    "plugins/hutools/plugin.json",
+    "plugins/hutools/.codex-plugin/plugin.json",
     "plugins/hutools/skills/code-review/SKILL.md",
     "plugins/hutools/skills/codebase-design/SKILL.md",
     "plugins/hutools/skills/diagnosing-bugs/SKILL.md",

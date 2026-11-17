@@ -2,7 +2,7 @@
 
 安装一次，在工程中选择 HuTools 并输入“运行”。经理确认资料库和目标，按任务范围检查工程，组织需求、设计、开发、验证及资料整理。9 个技能、共同规则、角色说明和模板都在包内；使用工程不必提前准备 AGENTS.md 或额外安装同名技能，有效工程约定仍会沿用。
 
-**当前候选版：0.2.0-rc.1。** 已加入获批研发、任务与证据检查、资料生命周期工具及 hooks。候选实现和本机验证不等于目标客户端安装与保护验收；当前结果和未验项见[交付状态](docs/implementation-status.md)。原 main 分支不变，HuTools 在 hutools 分支维护。
+**当前候选版：0.2.0-rc.2。** 已加入获批研发、任务与证据检查、资料生命周期工具及 hooks。候选实现和本机验证不等于目标客户端安装与保护验收；当前结果和未验项见[交付状态](docs/implementation-status.md)。原 main 分支不变，HuTools 在 hutools 分支维护。
 
 ## 安装与运行
 
@@ -12,7 +12,7 @@
 codex plugin marketplace add https://github.com/hjm0825/kiki.git --ref hutools
 ```
 
-然后通过客户端 Plugins 安装 HuTools，并新建对话选择插件。**本地候选提交未推送前，远端仍是旧版**；不能只按这里的版本号判断已安装内容。安装后核对 plugin.json 的版本，新增 hooks 必须在宿主 `/hooks` 中审阅信任，不自动放宽权限。目标宿主不支持 hooks 时明确保留对应执行保护的缺口。
+然后通过客户端 Plugins 安装 HuTools，并新建对话选择插件。**安装后核对 `plugins/hutools/.codex-plugin/plugin.json` 的版本**。rc.2 修复了 rc.1 的插件 hooks 无法被 CLI 0.155.1 发现的问题；本地候选未发布时，远端和已安装版本不会自动更新。新增 hooks 必须在宿主 `/hooks` 中审阅信任，不自动放宽权限。目标宿主不支持 hooks 时明确保留对应执行保护的缺口。
 
 入口先询问模式或接住已有目标，并确认记录中的本地资料库。同次接手确认过的不重复；没有资料库可记待建立，确认路径不自动创建或迁移数据。确定任务后再检查受影响源码、构建、暂存区和证据，不在菜单前展开全仓历史与未跟踪产物。
 
@@ -45,3 +45,14 @@ python3 -m unittest discover -s tests -v
 检查器验证安装包资源、引用和配置；行为测试包含失败/拒绝/迁移。真实客户端安装、卡片、hook 信任与拒绝另行验证。回退使用明确的先前发布提交，先核对项目任务格式和规则版本，不删除新产生的项目材料。
 
 自有内容采用 [MIT](LICENSE)，[第三方来源及许可](plugins/hutools/THIRD_PARTY_NOTICES.md)随插件保存。
+
+## 开发接续
+
+- [完整需求与已确认决定](docs/requirements-and-decisions.md)
+- [B02 实施方案及 M01–M07 清单](docs/b02-plan.md)
+- [当前状态与下一步](docs/implementation-status.md)
+- [验收记录与历史失败](docs/b02-validation.md)
+
+本次提交后在用户指定的正式路径重新克隆 `hutools` 分支继续开发，停止将临时副本作为长期工作区。换路径不复制旧机器凭据或全局配置；任务状态使用相对工程根。插件更新、手动信任和实际调用拒绝仍须完成，发现三个 hooks 只证明加载格式修复。
+
+[完整交付包、补充材料及正式路径接续](releases/README.md)。
