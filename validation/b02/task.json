@@ -4,7 +4,7 @@
   "spec": {
     "task_id": "HUTOOLS-B02-20261117",
     "rules_version": "0.2.0-rc.1",
-    "source_version": "eb8c6a9+B02-approved-candidate",
+    "source_version": "9bddb36280860d3702689493309e4ba366de3292 (source files unchanged)",
     "author": "b02-implementation-team",
     "requirements": [
       "package",
@@ -13,9 +13,45 @@
       "host-install"
     ],
     "inputs": [
-      "plugins/hutools",
-      "scripts",
-      "tests"
+      "plugins/hutools/AGENTS.md",
+      "plugins/hutools/LICENSE",
+      "plugins/hutools/THIRD_PARTY_NOTICES.md",
+      "plugins/hutools/hooks/README.md",
+      "plugins/hutools/hooks/guard.py",
+      "plugins/hutools/hooks/hooks.json",
+      "plugins/hutools/licenses/mattpocock-MIT.txt",
+      "plugins/hutools/plugin.json",
+      "plugins/hutools/skills/code-review/SKILL.md",
+      "plugins/hutools/skills/codebase-design/SKILL.md",
+      "plugins/hutools/skills/diagnosing-bugs/SKILL.md",
+      "plugins/hutools/skills/domain-modeling/SKILL.md",
+      "plugins/hutools/skills/grill-with-docs/SKILL.md",
+      "plugins/hutools/skills/grilling/SKILL.md",
+      "plugins/hutools/skills/hutools/SKILL.md",
+      "plugins/hutools/skills/hutools/agents/openai.yaml",
+      "plugins/hutools/skills/hutools/assets/problem-report.md",
+      "plugins/hutools/skills/hutools/assets/project-context.md",
+      "plugins/hutools/skills/hutools/assets/task.md",
+      "plugins/hutools/skills/hutools/references/analysis.md",
+      "plugins/hutools/skills/hutools/references/development.md",
+      "plugins/hutools/skills/hutools/references/intake.md",
+      "plugins/hutools/skills/hutools/references/materials.md",
+      "plugins/hutools/skills/hutools/references/observation.md",
+      "plugins/hutools/skills/hutools/references/roles.md",
+      "plugins/hutools/skills/hutools/references/rule-map.md",
+      "plugins/hutools/skills/hutools/references/rules.md",
+      "plugins/hutools/skills/research/SKILL.md",
+      "plugins/hutools/skills/tdd/SKILL.md",
+      "plugins/hutools/sources.lock.json",
+      "plugins/hutools/tools/lifecycle.md",
+      "plugins/hutools/tools/lifecycle.py",
+      "plugins/hutools/tools/workflow.md",
+      "plugins/hutools/tools/workflow.py",
+      "scripts/check_bundle.py",
+      "tests/test_bundle.py",
+      "tests/test_guard.py",
+      "tests/test_lifecycle.py",
+      "tests/test_workflow.py"
     ],
     "writable_paths": [
       "validation/b02"
@@ -64,9 +100,9 @@
   "status": "paused",
   "approval": {
     "actor": "user",
-    "decision": "B02 batch confirmation call_398f9b6672234def9e9fc388bce9b091",
-    "at": "2026-11-17T10:12:06.528385+00:00",
-    "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c",
+    "decision": "原B02批准范围内的输入身份修正；不包含可重建缓存，无需求/验收条件变化",
+    "at": "2026-11-17T10:16:24.372573+00:00",
+    "spec_sha256": "4cec9f0ddedf8689feb9b6c931ca9706d0868dc313585e332da0f17d6d060d55",
     "trust": "recorded_external_decision"
   },
   "events": [
@@ -114,6 +150,119 @@
       "previous": "running",
       "target": "paused",
       "reason": "等待用户审阅候选并完成目标客户端安装/hook信任与实测；本机源码验证完成"
+    },
+    {
+      "at": "2026-11-17T10:16:24.362234+00:00",
+      "type": "spec_revised",
+      "reason": "分发态核验发现目录输入包含未跟踪Python缓存；实际源码字节全部相同。改为完整Git交付源码/规则/测试精确清单，不改需求或验收判据；原证据及旧规格保留。",
+      "previous_spec": {
+        "task_id": "HUTOOLS-B02-20261117",
+        "rules_version": "0.2.0-rc.1",
+        "source_version": "eb8c6a9+B02-approved-candidate",
+        "author": "b02-implementation-team",
+        "requirements": [
+          "package",
+          "functional",
+          "independent-review",
+          "host-install"
+        ],
+        "inputs": [
+          "plugins/hutools",
+          "scripts",
+          "tests"
+        ],
+        "writable_paths": [
+          "validation/b02"
+        ],
+        "requires_independent_review": true,
+        "cases": [
+          {
+            "id": "bundle",
+            "requirement": "package",
+            "kind": "command",
+            "argv": [
+              "python3",
+              "-B",
+              "scripts/check_bundle.py"
+            ],
+            "timeout_seconds": 30
+          },
+          {
+            "id": "tests",
+            "requirement": "functional",
+            "kind": "command",
+            "argv": [
+              "python3",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests",
+              "-v"
+            ],
+            "timeout_seconds": 60
+          },
+          {
+            "id": "review",
+            "requirement": "independent-review",
+            "kind": "review"
+          },
+          {
+            "id": "host-install",
+            "requirement": "host-install",
+            "kind": "manual"
+          }
+        ]
+      },
+      "previous_approval": {
+        "actor": "user",
+        "decision": "B02 batch confirmation call_398f9b6672234def9e9fc388bce9b091",
+        "at": "2026-11-17T10:12:06.528385+00:00",
+        "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c",
+        "trust": "recorded_external_decision"
+      }
+    },
+    {
+      "at": "2026-11-17T10:16:24.372640+00:00",
+      "type": "approved",
+      "actor": "user",
+      "decision": "原B02批准范围内的输入身份修正；不包含可重建缓存，无需求/验收条件变化"
+    },
+    {
+      "at": "2026-11-17T10:16:24.375037+00:00",
+      "type": "transition",
+      "previous": "approved",
+      "target": "running",
+      "reason": "实际分发态身份修正后的重验"
+    },
+    {
+      "at": "2026-11-17T10:16:24.524454+00:00",
+      "type": "check",
+      "case_id": "bundle",
+      "evidence_id": "07aacfe3f3bd460e88931346d2c16dd7",
+      "outcome": "pass"
+    },
+    {
+      "at": "2026-11-17T10:16:28.555504+00:00",
+      "type": "check",
+      "case_id": "tests",
+      "evidence_id": "958c1cef9ac04079b2131e391c5462ca",
+      "outcome": "pass"
+    },
+    {
+      "at": "2026-11-17T10:16:28.570933+00:00",
+      "type": "attestation",
+      "case_id": "review",
+      "evidence_id": "a08d52efe06a4a44b446ebf71176a1a2",
+      "actor": "independent-review-agents"
+    },
+    {
+      "at": "2026-11-17T10:16:28.573295+00:00",
+      "type": "transition",
+      "previous": "running",
+      "target": "paused",
+      "reason": "待目标客户端安装、信任与实际拒绝验收"
     }
   ],
   "evidence": [
@@ -181,8 +330,73 @@
       "artifact_sha256": "2291b7bb00189e23fd83f9dee6366f1de3c614d975331ada7809bec9afbf34d4",
       "input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
       "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c"
+    },
+    {
+      "id": "07aacfe3f3bd460e88931346d2c16dd7",
+      "at": "2026-11-17T10:16:24.524321+00:00",
+      "case_id": "bundle",
+      "kind": "command",
+      "collector": "run-check",
+      "actor": "b02-implementation-team",
+      "outcome": "pass",
+      "returncode": 0,
+      "reason": "exit",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_bundle.py"
+      ],
+      "duration_seconds": 0.119144,
+      "output_limit_bytes": 1048576,
+      "artifact": "validation/b02/task-evidence/6dc3b162ac6649248e5b88f5fb40f000.log",
+      "artifact_sha256": "9bf5d597ef1cce6c355e1727229cc29f9433e59b89ec5ce3fdd64387b7217581",
+      "input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+      "after_input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+      "spec_sha256": "4cec9f0ddedf8689feb9b6c931ca9706d0868dc313585e332da0f17d6d060d55"
+    },
+    {
+      "id": "958c1cef9ac04079b2131e391c5462ca",
+      "at": "2026-11-17T10:16:28.555364+00:00",
+      "case_id": "tests",
+      "kind": "command",
+      "collector": "run-check",
+      "actor": "b02-implementation-team",
+      "outcome": "pass",
+      "returncode": 0,
+      "reason": "exit",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "duration_seconds": 3.993805,
+      "output_limit_bytes": 1048576,
+      "artifact": "validation/b02/task-evidence/83d692132a36446e935cc9ddca3d6178.log",
+      "artifact_sha256": "81126ac1ee61c5bdd1998307f6ca4e0314c2e08e9ebdeec2227916fa1bb52fb8",
+      "input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+      "after_input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+      "spec_sha256": "4cec9f0ddedf8689feb9b6c931ca9706d0868dc313585e332da0f17d6d060d55"
+    },
+    {
+      "id": "a08d52efe06a4a44b446ebf71176a1a2",
+      "at": "2026-11-17T10:16:28.558395+00:00",
+      "case_id": "review",
+      "kind": "review",
+      "collector": "human-attestation",
+      "actor": "independent-review-agents",
+      "outcome": "pass",
+      "statement": "独立审查原源码全部字节相同；仅移除未跟踪缓存的证据输入，复用实际审查范围",
+      "artifact": "validation/b02/review.md",
+      "artifact_sha256": "2291b7bb00189e23fd83f9dee6366f1de3c614d975331ada7809bec9afbf34d4",
+      "input_sha256": "2236f815daa8f7aa7e5d0a36395db97e4c19e416cd6bb458a16a7747a1f14ddc",
+      "spec_sha256": "4cec9f0ddedf8689feb9b6c931ca9706d0868dc313585e332da0f17d6d060d55"
     }
   ],
   "created_at": "2026-11-17T10:12:06.526268+00:00",
-  "updated_at": "2026-11-17T10:13:11.340889+00:00"
+  "updated_at": "2026-11-17T10:16:28.573362+00:00"
 }
