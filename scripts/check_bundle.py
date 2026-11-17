@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import ast
 from pathlib import Path
 import re
 from urllib.parse import unquote, urlsplit
@@ -107,8 +108,42 @@ def validate(root):
         errors.append("plugin.json 缺少相对 onboardingSkill")
     elif not contained(plugin / onboarding, plugin) or not (plugin / onboarding).is_file():
         errors.append("plugin.json onboardingSkill 不存在或越界")
-    if any(key in overlay for key in ("hooks", "apps")):
-        errors.append("本预览版不应声明尚未交付的 hooks/apps")
+    if overlay.get("hooks") != "./hooks/hooks.json":
+        errors.append("hooks 必须指向包内 ./hooks/hooks.json")
+    if "apps" in overlay:
+        errors.append("本版没有外部 apps 服务")
+    hook_data = read_json(plugin / "hooks/hooks.json")
+    events = hook_data.get("hooks", {})
+    if not isinstance(events, dict) or set(events) != {"SessionStart", "PreToolUse", "Stop"}:
+        errors.append("hook 事件集不完整或含未交付事件")
+    else:
+        for event, groups in events.items():
+            if not isinstance(groups, list) or not groups:
+                errors.append(f"hook {event} 缺少处理器")
+                continue
+            for group in groups:
+                expected_matcher = {"SessionStart": "startup|resume|fork", "PreToolUse": ".*", "Stop": None}[event]
+                allowed_group_keys = {"hooks"} if event == "Stop" else {"hooks", "matcher"}
+                if not isinstance(group, dict) or set(group) != allowed_group_keys or group.get("matcher") != expected_matcher:
+                    errors.append(f"hook {event} matcher/配置范围与本版不符")
+                handlers = group.get("hooks", []) if isinstance(group, dict) else []
+                if not isinstance(handlers, list) or not handlers:
+                    errors.append(f"hook {event} 处理器格式错误")
+                    continue
+                for handler in handlers:
+                    if not isinstance(handler, dict) or handler.get("type") != "command" or handler.get("command") != 'python3 "${PLUGIN_ROOT}/hooks/guard.py"':
+                        errors.append(f"hook {event} 必须使用包内正式处理器")
+                    if not isinstance(handler, dict) or set(handler) != {"type", "command", "timeout"} or type(handler.get("timeout")) is not int or not 1 <= handler["timeout"] <= 60:
+                        errors.append(f"hook {event} 必须同步执行且具有有界 timeout")
+    for relative in ["AGENTS.md", "hooks/guard.py", "hooks/README.md", "tools/workflow.py", "tools/lifecycle.py"]:
+        if not (plugin / relative).is_file():
+            errors.append(f"缺少运行资源：{relative}")
+    for path in files:
+        if path.suffix == ".py":
+            try:
+                ast.parse(path.read_text(encoding="utf-8"), filename=str(path.relative_to(root)))
+            except (SyntaxError, UnicodeError, OSError) as exc:
+                errors.append(f"Python 源文件不可解析：{path.relative_to(root)}：{exc}")
 
     for name in sorted(REQUIRED_SKILLS):
         skill = plugin / "skills" / name / "SKILL.md"

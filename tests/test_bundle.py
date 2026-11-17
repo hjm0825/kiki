@@ -42,6 +42,30 @@ class BundleTests(unittest.TestCase):
         self.assertTrue(json.loads(result.stdout)["ok"])
         self.assertFalse(self.root.exists())
 
+    def test_missing_runtime_guard_fails(self):
+        (self.plugin / "hooks/guard.py").unlink()
+        self.assertTrue(any("guard.py" in e for e in self.errors()))
+
+    def test_hook_cannot_call_external_script(self):
+        path = self.plugin / "hooks/hooks.json"
+        data = json.loads(path.read_text())
+        data["hooks"]["PreToolUse"][0]["hooks"][0]["command"] = "python3 /external.py"
+        path.write_text(json.dumps(data))
+        self.assertTrue(any("包内正式处理器" in e for e in self.errors()))
+
+    def test_hook_matcher_and_async_regression_rejected(self):
+        path = self.plugin / "hooks/hooks.json"
+        original = json.loads(path.read_text())
+        for matcher in ["__hutools_no_real_tool__", "["]:
+            data = json.loads(json.dumps(original))
+            data["hooks"]["PreToolUse"][0]["matcher"] = matcher
+            path.write_text(json.dumps(data))
+            self.assertTrue(any("matcher" in e for e in self.errors()))
+        data = json.loads(json.dumps(original))
+        data["hooks"]["PreToolUse"][0]["hooks"][0]["async"] = True
+        path.write_text(json.dumps(data))
+        self.assertTrue(any("同步" in e for e in self.errors()))
+
     def test_missing_skill_fails(self):
         (self.plugin / "skills/diagnosing-bugs/SKILL.md").unlink()
         self.assertTrue(any("diagnosing-bugs" in e for e in self.errors()))

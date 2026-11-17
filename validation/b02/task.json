@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "project_root": "../..",
+  "spec": {
+    "task_id": "HUTOOLS-B02-20261117",
+    "rules_version": "0.2.0-rc.1",
+    "source_version": "eb8c6a9+B02-approved-candidate",
+    "author": "b02-implementation-team",
+    "requirements": [
+      "package",
+      "functional",
+      "independent-review",
+      "host-install"
+    ],
+    "inputs": [
+      "plugins/hutools",
+      "scripts",
+      "tests"
+    ],
+    "writable_paths": [
+      "validation/b02"
+    ],
+    "requires_independent_review": true,
+    "cases": [
+      {
+        "id": "bundle",
+        "requirement": "package",
+        "kind": "command",
+        "argv": [
+          "python3",
+          "-B",
+          "scripts/check_bundle.py"
+        ],
+        "timeout_seconds": 30
+      },
+      {
+        "id": "tests",
+        "requirement": "functional",
+        "kind": "command",
+        "argv": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-v"
+        ],
+        "timeout_seconds": 60
+      },
+      {
+        "id": "review",
+        "requirement": "independent-review",
+        "kind": "review"
+      },
+      {
+        "id": "host-install",
+        "requirement": "host-install",
+        "kind": "manual"
+      }
+    ]
+  },
+  "status": "paused",
+  "approval": {
+    "actor": "user",
+    "decision": "B02 batch confirmation call_398f9b6672234def9e9fc388bce9b091",
+    "at": "2026-11-17T10:12:06.528385+00:00",
+    "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c",
+    "trust": "recorded_external_decision"
+  },
+  "events": [
+    {
+      "at": "2026-11-17T10:12:06.526272+00:00",
+      "type": "created"
+    },
+    {
+      "at": "2026-11-17T10:12:06.528429+00:00",
+      "type": "approved",
+      "actor": "user",
+      "decision": "B02 batch confirmation call_398f9b6672234def9e9fc388bce9b091"
+    },
+    {
+      "at": "2026-11-17T10:12:06.530480+00:00",
+      "type": "transition",
+      "previous": "approved",
+      "target": "running",
+      "reason": "已批准范围内整合验收"
+    },
+    {
+      "at": "2026-11-17T10:12:06.671378+00:00",
+      "type": "check",
+      "case_id": "bundle",
+      "evidence_id": "c0171cbb11304423bf34f87b8a7d2c70",
+      "outcome": "pass"
+    },
+    {
+      "at": "2026-11-17T10:12:10.795440+00:00",
+      "type": "check",
+      "case_id": "tests",
+      "evidence_id": "29cab2fb6ed34be682e83619d74352d3",
+      "outcome": "pass"
+    },
+    {
+      "at": "2026-11-17T10:13:11.338469+00:00",
+      "type": "attestation",
+      "case_id": "review",
+      "evidence_id": "f3d7923792dd4686ab4321ffc16f8d97",
+      "actor": "independent-review-agents"
+    },
+    {
+      "at": "2026-11-17T10:13:11.340823+00:00",
+      "type": "transition",
+      "previous": "running",
+      "target": "paused",
+      "reason": "等待用户审阅候选并完成目标客户端安装/hook信任与实测；本机源码验证完成"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "c0171cbb11304423bf34f87b8a7d2c70",
+      "at": "2026-11-17T10:12:06.671252+00:00",
+      "case_id": "bundle",
+      "kind": "command",
+      "collector": "run-check",
+      "actor": "b02-implementation-team",
+      "outcome": "pass",
+      "returncode": 0,
+      "reason": "exit",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_bundle.py"
+      ],
+      "duration_seconds": 0.111449,
+      "output_limit_bytes": 1048576,
+      "artifact": "validation/b02/task-evidence/085db315542548d4b6f4208b74230f8d.log",
+      "artifact_sha256": "9bf5d597ef1cce6c355e1727229cc29f9433e59b89ec5ce3fdd64387b7217581",
+      "input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+      "after_input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+      "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c"
+    },
+    {
+      "id": "29cab2fb6ed34be682e83619d74352d3",
+      "at": "2026-11-17T10:12:10.795319+00:00",
+      "case_id": "tests",
+      "kind": "command",
+      "collector": "run-check",
+      "actor": "b02-implementation-team",
+      "outcome": "pass",
+      "returncode": 0,
+      "reason": "exit",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "duration_seconds": 4.087691,
+      "output_limit_bytes": 1048576,
+      "artifact": "validation/b02/task-evidence/2b1fdaac1da447c98ede4399a7aa14c2.log",
+      "artifact_sha256": "7a0afff24b9893a4deb3116665eff08d31488152ea1e51150d4dc8e869f75817",
+      "input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+      "after_input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+      "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c"
+    },
+    {
+      "id": "f3d7923792dd4686ab4321ffc16f8d97",
+      "at": "2026-11-17T10:13:11.325690+00:00",
+      "case_id": "review",
+      "kind": "review",
+      "collector": "human-attestation",
+      "actor": "independent-review-agents",
+      "outcome": "pass",
+      "statement": "独立反例复核关闭已知P1/P2；范围及限制见报告",
+      "artifact": "validation/b02/review.md",
+      "artifact_sha256": "2291b7bb00189e23fd83f9dee6366f1de3c614d975331ada7809bec9afbf34d4",
+      "input_sha256": "03924f5fc5fa26fbf3d834b1b256e8166f7c3b9feecd228ffdc7cab0fcb078b7",
+      "spec_sha256": "befbec39a22a5ea97239c267a01eed339dc7af4179cfb164b06c13e5eb41b11c"
+    }
+  ],
+  "created_at": "2026-11-17T10:12:06.526268+00:00",
+  "updated_at": "2026-11-17T10:13:11.340889+00:00"
+}

@@ -1,0 +1,60 @@
+{
+  "task_id": "HUTOOLS-B02-20261117",
+  "rules_version": "0.2.0-rc.1",
+  "source_version": "eb8c6a9+B02-approved-candidate",
+  "author": "b02-implementation-team",
+  "requirements": [
+    "package",
+    "functional",
+    "independent-review",
+    "host-install"
+  ],
+  "inputs": [
+    "plugins/hutools",
+    "scripts",
+    "tests"
+  ],
+  "writable_paths": [
+    "validation/b02"
+  ],
+  "requires_independent_review": true,
+  "cases": [
+    {
+      "id": "bundle",
+      "requirement": "package",
+      "kind": "command",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_bundle.py"
+      ],
+      "timeout_seconds": 30
+    },
+    {
+      "id": "tests",
+      "requirement": "functional",
+      "kind": "command",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "id": "review",
+      "requirement": "independent-review",
+      "kind": "review"
+    },
+    {
+      "id": "host-install",
+      "requirement": "host-install",
+      "kind": "manual"
+    }
+  ]
+}
