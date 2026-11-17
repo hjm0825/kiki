@@ -1,0 +1,12 @@
+{
+  "name": "hutools",
+  "interface": {"displayName": "HuTools"},
+  "plugins": [
+    {
+      "name": "hutools",
+      "source": {"source": "local", "path": "./plugins/hutools"},
+      "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+      "category": "Productivity"
+    }
+  ]
+}

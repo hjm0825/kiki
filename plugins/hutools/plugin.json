@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "hutools",
+  "version": "0.1.0-preview.1",
+  "description": "HuTools 工程团队：卡片引导、需求讨论、源码与日志分析、中文 Markdown 报告。",
+  "author": {"name": "hjm0825"},
+  "repository": "https://github.com/hjm0825/kiki",
+  "homepage": "https://github.com/hjm0825/kiki/tree/hutools",
+  "license": "MIT",
+  "keywords": ["engineering", "research", "diagnosis"],
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/hutools/SKILL.md",
+      "interface": {
+        "displayName": "HuTools",
+        "shortDescription": "从运行开始，讨论需求、分析问题并输出清晰报告",
+        "longDescription": "入口与分析预览版。复用本机 Codex 能力，经理按需组织团队；研发源码执行和强制拦截后续接入。",
+        "developerName": "hjm0825",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "defaultPrompt": ["运行 HuTools", "用 HuTools 分析项目问题", "用 HuTools 讨论开发需求"]
+      }
+    }
+  }
+}
