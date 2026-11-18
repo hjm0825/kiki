@@ -1,6 +1,6 @@
 {
   "name": "hutools",
-  "version": "0.2.0-rc.3",
+  "version": "0.2.0-rc.4",
   "description": "HuTools 工程协作：轻量接入、研发闭环、独立验证、资料管理与受控调用检查。",
   "author": {
     "name": "hjm0825"
