@@ -17,5 +17,32 @@
   },
   "extracted_regression": "----------------------------------------------------------------------\nRan 79 tests in 5.246s\n\nOK",
   "installed_plugin_files": 34,
-  "installed_plugin_tree_sha256": "b987a70f27d65525762f7f5f20ed8bf9283f3e78ff76537955e411cdcea0a74c"
+  "installed_plugin_tree_sha256": "b987a70f27d65525762f7f5f20ed8bf9283f3e78ff76537955e411cdcea0a74c",
+  "verified_local_install": {
+    "codex_cli": "0.155.1",
+    "plugin": "hutools@hutools",
+    "loaded_version": "0.2.0-rc.3",
+    "manifest_and_payload_files_verified": 34,
+    "entry_skill": "hutools:hutools",
+    "checked_with": [
+      "plugin/install",
+      "hooks/list",
+      "skills/list"
+    ],
+    "supported_events": {
+      "sessionStart": {
+        "enabled": true,
+        "trust_status": "trusted"
+      },
+      "preToolUse": {
+        "enabled": true,
+        "trust_status": "trusted"
+      },
+      "stop": {
+        "enabled": true,
+        "trust_status": "trusted"
+      }
+    },
+    "scope": "user installation; project execution policy unbound"
+  }
 }
