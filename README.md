@@ -2,7 +2,7 @@
 
 安装一次，在工程中选择 HuTools 并输入“运行”。经理确认资料库和目标，按任务范围检查工程，组织需求、设计、开发、验证及资料整理。9 个技能、共同规则、角色说明和模板都在包内；使用工程不必提前准备 AGENTS.md 或额外安装同名技能，有效工程约定仍会沿用。
 
-**当前源码候选版为 0.2.0-rc.4。** 设计从使用场景进入，每个设计任务提供可独立评审的方案，资料管理员主动维护当前文档入口。[本次设计与验证](docs/design-workflow.md) · [rc.3 验收](docs/b03-validation.md)。HuTools 在 `hutools` 分支维护。
+**当前源码候选版为 0.2.0-rc.5。** 每次启动工程工作流时显示资料库绑定，由用户选择本次是否整理。选整理后首次全量梳理，以后接续缺口或按需更新；空工程可先建立双环目录。按阶段和模块均可查阅用户方案及其依据。[文档管理员使用与验收](docs/catalog-workflow.md) · [rc.4 设计流程](docs/design-workflow.md) · [rc.3 验收](docs/b03-validation.md)。HuTools 在 `hutools` 分支维护。
 
 ## 安装与运行
 
@@ -29,6 +29,7 @@ codex plugin marketplace add https://github.com/hjm0825/kiki.git --ref hutools
 仅依赖 Python 3.10+ 标准库；受控检查命令执行当前验证范围为 POSIX。工具和说明全部随插件携带：
 
 - [工作流](plugins/hutools/tools/workflow.md)：需求—批准—版本—证据关联，实际命令采集、独立审查留痕、暂停恢复和状态检查。
+- [双环整理记录](plugins/hutools/tools/catalog.md)保存各范围的盘点依据及缺口处置，重新运行时可接续。
 - [资料管理](plugins/hutools/tools/lifecycle.md)：精确清单、归档校验、候选审查、可恢复隔离及恢复；不提供永久删除。
 - [执行检查](plugins/hutools/hooks/README.md)：受支持调用的前置拒绝、规则版本检查及交付反馈。
 - [规则与职责](plugins/hutools/AGENTS.md)：共同规则唯一来源，岗位按需加载。

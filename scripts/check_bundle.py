@@ -134,7 +134,7 @@ def validate(root):
                         errors.append(f"hook {event} 必须使用包内正式处理器")
                     if not isinstance(handler, dict) or set(handler) != {"type", "command", "timeout"} or type(handler.get("timeout")) is not int or not 1 <= handler["timeout"] <= 60:
                         errors.append(f"hook {event} 必须同步执行且具有有界 timeout")
-    for relative in ["AGENTS.md", "hooks/guard.py", "hooks/README.md", "tools/workflow.py", "tools/lifecycle.py"]:
+    for relative in ["AGENTS.md", "hooks/guard.py", "hooks/README.md", "tools/workflow.py", "tools/lifecycle.py", "tools/catalog.py", "tools/catalog.md"]:
         if not (plugin / relative).is_file():
             errors.append(f"缺少运行资源：{relative}")
     for path in files:
