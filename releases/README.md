@@ -17,6 +17,6 @@ python3 -B scripts/check_bundle.py
 python3 -B plugins/hutools/tools/workflow.py status --state "$PWD/validation/b02/task.json"
 ```
 
-从 [README](../README.md) 进入需求、方案、状态与验收。当前必需缺口仍是 `host-install`；不能把状态查询退出码0或目录迁移成功当作全部完成。实际插件更新到rc.2后，核对三个hook已出现，再由用户手动信任并完成绑定/拒绝/允许路径验证。全量回归命令为 `python3 -B -m unittest discover -s tests -v`，本批73项已通过。
+从 [README](../README.md) 进入需求、方案、状态与验收。2026-11-17 的归档包保留当日 `host-install` 待验的快照。正式工作区于 2026-11-18 完成本机 rc.2 的信任、绑定、放行、拒绝及 Stop 检查。[本机宿主验收](../validation/b02/host-install-20261118.md)。换机时仍需核对实际安装并重新测试。全量回归命令为 `python3 -B -m unittest discover -s tests -v`，本批 73 项已通过。
 
 本批结束后不再在原临时工作区继续研发。清理只覆盖已归入此交付范围的精确HuTools临时目录；先核验远端包和逐文件内容，再确认无活动占用、无新改动后清理。其他程序临时文件不属于本批。公共包不带账号凭据、仿真业务材料或资料库本机绑定；新机器重新确认本地资料库，不能把Git索引当原始外部数据副本。

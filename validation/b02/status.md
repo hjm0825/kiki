@@ -1,6 +1,6 @@
 # HUTOOLS-B02-20261117
 
-状态：paused
+状态：complete
 规则版本：0.2.0-rc.1
 来源版本：e24d618bbfe5b2c487c2e3ce9b1443cfecbce758 + B02-M05/M07 rc.2 manifest compatibility fix
 
@@ -11,8 +11,6 @@
 | bundle | package | command | pass |
 | tests | functional | command | pass |
 | review | independent-review | review | pass |
-| host-install | host-install | manual | 待验证 |
+| host-install | host-install | manual | pass |
 
-当前交付检查：未通过
-
-- host-install 缺少证据
+当前交付检查：通过（限声明输入与验收项）

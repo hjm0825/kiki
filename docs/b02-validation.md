@@ -1,5 +1,33 @@
 # B02 验收记录
 
+## 2026-11-18 正式工作区的本机安装复核
+
+在 `hutools` 分支提交 `fdcc570` 上接续 B02。用户确认沿用仓库资料，并报告已在宿主界面审阅通过三个钩子。已安装缓存的 manifest 标示 `0.2.0-rc.2`。逐字节比较 manifest、`hooks.json`、`guard.py` 和共同规则，四个文件均与工作区一致。
+
+| 验收项 | 本次观察 |
+| --- | --- |
+| 会话和工具调用初查 | 会话开始时以及只读命令调用前，宿主均传入 HuTools 的“未绑定执行策略：保护未启用”提示。此时尚未绑定一次性策略，后续 Stop 实测见下文。 |
+| 安装件处理器 | 在临时样例中直接运行已安装的 `guard.py --policy`，给同一份策略输入两个补丁事件。清单内的 `allowed.txt` 返回空对象，清单外的 `unlisted.txt` 返回 `permissionDecision=deny`。两个补丁均仅作为输入，样例项目保持为空。 |
+| 仓库回归 | `python3 -B scripts/check_bundle.py` 通过。全量 unittest 首次在默认沙箱运行，73 项中 58 项报错，输出含临时样例写入权限错误。经宿主审批，用同一命令 `python3 -B -m unittest discover -s tests -q` 复跑，73 项通过。 |
+
+### 宿主信任和文件系统实测
+
+Codex CLI 0.155.1 的 app-server 在正式工作区响应 `hooks/list`，返回的 `hutools@hutools` 三项事件均为 `enabled=true`、`trustStatus=trusted`，查询错误数为 0。
+
+在三个已有内容为 `before` 的样例文件上运行 `codex sandbox`，退出后由外部读取实际内容。测试配置继承 `:read-only`，仅额外开放表中的目标。
+
+| 样例位置和范围 | 允许文件 | 清单外文件、工程外控制文件 |
+| --- | --- | --- |
+| 系统临时目录，精确到单文件 | 宿主构造挂载时返回 `Not a directory`，写入程序未运行 | 两个原值均保留 |
+| 系统临时目录，仅开放 `output/` | 写入返回 `EACCES`，原值保留 | 两次写入均返回 `EROFS`，原值保留 |
+| 正式工作区 `validation/b02` 下的一次性样例，仅开放 `output/` | `output/allowed.txt` 写入成功，读回 `after` | 同一工程的目录外文件及工程外控制文件均返回 `EROFS`，读回 `before` |
+
+已安装的 `guard.py` 直接读取隔离工作流状态时，运行中任务的 Stop 返回 `block`，带 `stop_hook_active=true` 的后续检查返回 `continue=false`。样例命令通过且工作流转为完成后，Stop 返回空对象。
+
+随后在经用户授权的独立 Codex 会话中，完成了从策略加载、实际写入和拒绝到 Stop 反馈的验证。过期和错误字段的策略均被明确拒绝，测试策略、已安装处理器和样例状态的写保护也已实测。本机 `host-install` 通过。环境、逐项结果及未覆盖范围见[本机宿主验收](../validation/b02/host-install-20261118.md)。
+
+## 2026-11-17 候选版历史记录
+
 日期：2026-11-17。基线：eb8c6a9f8d0fbcb30d7493a32601d8049adef0c1。用户明确批准 B02 全批实施、隔离测试与精确本地提交；不包含真实资料删除、全局权限放宽或自动信任 hooks。候选源码树的精确身份在提交中保存；运行证据清单见本文件后续条目。
 
 ## 验证范围

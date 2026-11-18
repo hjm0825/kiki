@@ -53,6 +53,6 @@ python3 -m unittest discover -s tests -v
 - [当前状态与下一步](docs/implementation-status.md)
 - [验收记录与历史失败](docs/b02-validation.md)
 
-本次提交后在用户指定的正式路径重新克隆 `hutools` 分支继续开发，停止将临时副本作为长期工作区。换路径不复制旧机器凭据或全局配置；任务状态使用相对工程根。插件更新、手动信任和实际调用拒绝仍须完成，发现三个 hooks 只证明加载格式修复。
+本机已在正式工作区完成 rc.2 安装验收，三个钩子均获信任，独立样例验证了实际放行、拒绝和收尾反馈。新工程需单独绑定策略，新机器需重新审阅并验证安装。[本机宿主验收](validation/b02/host-install-20261118.md)
 
 [完整交付包、补充材料及正式路径接续](releases/README.md)。
