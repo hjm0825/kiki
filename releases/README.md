@@ -2,6 +2,8 @@
 
 当前候选为 `0.2.0-rc.3`。2026-11-18 的源代码、行为验收、安装结果和恢复边界见[B03 验收](../docs/b03-validation.md)及[本批任务](../validation/b03/task.json)。对新版本复核状态时使用 `validation/b03/task.json`，发布归档的校验值记在 `SHA256SUMS`。
 
+[下载 rc.3 完整包](HuTools-0.2.0-rc.3-full.zip)。从源码提交 `2a5a664` 导出，逐一核对 83 个 Git 文件。独立解压后包检查通过、五项验收状态有效，重新执行 79 项测试全部通过。源码身份、字节数和 SHA-256 见[rc.3 交付清单](delivery-rc.3.json)。
+
 ## rc.2 历史交付
 
 候选版本为 0.2.0-rc.2，日期为 2026-11-17。完整源码包为 `HuTools-0.2.0-rc.2-full.zip`，对应源码提交和 SHA-256 在随包 `delivery.json` 与 `SHA256SUMS` 中登记。

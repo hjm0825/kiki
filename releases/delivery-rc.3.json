@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0-rc.3",
+  "source_commit": "2a5a664a8af4b4fc7231bc7f6d99e8697f79b27b",
+  "branch": "hutools",
+  "date": "2026-11-18",
+  "source_archive": "HuTools-0.2.0-rc.3-full.zip",
+  "source_archive_sha256": "c751eb4597a459e39da8ddf55aebe6bf4f7d5fc912cac3ffa68d128949b69540",
+  "source_archive_bytes": 2587726,
+  "git_payload_files_verified": 83,
+  "extracted_bundle_check": {
+    "ok": true,
+    "errors": []
+  },
+  "extracted_task_status": {
+    "effective_status": "complete",
+    "completion_errors": []
+  },
+  "extracted_regression": "----------------------------------------------------------------------\nRan 79 tests in 5.246s\n\nOK",
+  "installed_plugin_files": 34,
+  "installed_plugin_tree_sha256": "b987a70f27d65525762f7f5f20ed8bf9283f3e78ff76537955e411cdcea0a74c"
+}
