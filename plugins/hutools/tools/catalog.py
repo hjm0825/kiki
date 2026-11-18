@@ -11,6 +11,7 @@ from pathlib import Path
 import stat
 import sys
 
+import catalog_layout
 from lifecycle import relative_path, root_path
 from workflow import no_links, now, read_json, save_state
 
@@ -135,6 +136,8 @@ def reset_source(scope, new_source):
     # 旧版关闭记录只对原来源有效；旧的开放问题须继续处理。
     scope['gaps'] = {key: gap for key, gap in scope['gaps'].items()
                      if gap['resolution'] is None}
+    scope.pop('layout', None)
+    scope.pop('layout_directory', None)
     scope['source'] = new_source
     scope['source_generation'] += 1
 
@@ -204,6 +207,10 @@ def check_scope(scope, root, library, state_path):
                 reopen_gap(scope, key)
     if scope['review']:
         try:
+            if scope.get('layout_directory'):
+                if not scope.get('layout'):
+                    raise ValueError('上次只完成了盘点')
+                catalog_layout.coverage(root, scope['layout'])
             for reference in scope['review']['evidence'].values():
                 verify_evidence(root, reference, state_path)
         except (OSError, ValueError) as exc:
@@ -215,6 +222,10 @@ def update_scope(args, scope, problem, root, state_path):
     if args.command == 'touch':
         invalidate(scope, args.reason)
     elif args.command == 'review':
+        if scope.get('layout_directory'):
+            if not scope.get('layout'):
+                raise ValueError('须先执行实体整理')
+            catalog_layout.coverage(root, scope['layout'])
         evidence = {'outer': args.outer, 'inner': args.inner, 'inventory': args.inventory}
         for reference in evidence.values():
             verify_evidence(root, reference, state_path)
@@ -295,12 +306,37 @@ def execute(args, path, root):
     binding_change = has_library and binding_id(args.library_root) != state['binding']
     if binding_change and args.command != 'status':
         raise ValueError('请先向用户核对资料库，再用 begin 记录新绑定')
+    if args.command == 'begin':
+        for key in args.layout_scope or []:
+            scope = state['scopes'][key]
+            if not scope['source'].startswith('project:'):
+                raise ValueError('实体文档范围须为工程目录')
+            scope['layout_directory'] = scope['source'].split(':', 1)[1]
     problems = {}
     for key, scope in state['scopes'].items():
         if binding_change and scope['source'].startswith('library:'):
             invalidate(scope, '本次资料库绑定尚未确认')
         else:
             problems[key] = check_scope(scope, root, args.library_root, path)
+    if args.command in ('inspect', 'arrange'):
+        scope = state['scopes'][args.scope]
+        directory = scope.get('layout_directory')
+        if not directory or problems.get(args.scope):
+            raise ValueError('须先登记可读的实体文档范围')
+        if args.command == 'inspect':
+            return {'directory': directory, 'files': catalog_layout.inventory(root, directory),
+                    'layout': scope.get('layout'), 'mode': view(state)['mode']}
+        plan = read_json(args.plan)
+        if plan['directory'] != directory:
+            raise ValueError('清单与已登记范围不同')
+        if args.apply and not args.recovery:
+            raise ValueError('执行时须指定工程外的恢复包')
+        layout, changed = catalog_layout.arrange(root, plan, args.recovery, args.apply, scope.get('layout'))
+        if changed:
+            scope['layout'] = layout
+            invalidate(scope, '实体整理已执行，待复核阅读入口')
+            save_state(path, state)
+        return dict(layout, changed=changed)
     if args.command not in ('begin', 'status'):
         if args.scope not in state['scopes']:
             raise ValueError(f'范围未登记：{args.scope}')
@@ -324,6 +360,14 @@ def main():
     commands.add_parser('status', help='只读核对当前模式和各范围的缺口')
     start = commands.add_parser('begin', help='对照全部约定范围接手')
     start.add_argument('--rebind-library', action='store_true', help='换机或同址换卷后按用户确认复核库范围')
+    start.add_argument('--layout-scope', action='append', help='实体双环的工程文档范围 ID')
+    for command in ('inspect', 'arrange'):
+        sub = commands.add_parser(command)
+        sub.add_argument('--scope', required=True)
+        if command == 'arrange':
+            sub.add_argument('--plan', required=True, type=Path)
+            sub.add_argument('--apply', action='store_true')
+            sub.add_argument('--recovery', type=Path)
     start.add_argument('--project', required=True, type=required)
     start.add_argument('--rules', required=True, type=required)
     start.add_argument('--scope', required=True, action='append', metavar='ID=来源:相对路径')

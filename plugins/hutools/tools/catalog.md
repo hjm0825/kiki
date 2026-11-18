@@ -53,3 +53,7 @@ catalog close --scope archive --id sample-record \
 ```
 
 核对剩余缺口及每个范围的审阅状态，只有全部满足才报告本轮完成。关闭方式、原始事实和使用局限随记录保存；对用户展示“已修复”或“按你决定结束修复”。无法访问范围时工具会暴露相应缺口，管理员需核对绑定并说明受影响资料。部署时在新的工作目录使用同一项目身份和索引，重新确认本机库绑定。
+
+## 非空工程的实体整理
+
+在原 begin 命令中加 --layout-scope 对应文档范围，再运行 inspect --scope 范围。管理员根据实盘准备 JSON 清单。directory 是已登记的工程文档目录。moves 是旧文件到新文件的映射。pages 是新 Markdown 路径与完整正文。pairs 列出阶段和模块每个外环页及其直接链接的内环页。keep 列出原位保留的文档入口。references 补充工程内需修改的 Markdown（如未随 Git 管理的本机契约），非 Git 工程显式列入目录外引用。edits 为原文件指定“原文、新文”对，在相对链接重写后应用，要求原文唯一。各文件位置相对工程根。先运行 arrange --scope 范围 --plan 清单，再加 --apply --recovery 工程外恢复包 执行。重复调用原清单可核对结果，最后 review。恢复包内 before/ 保存本批原件，files.json 登记目标及指纹。

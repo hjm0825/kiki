@@ -63,6 +63,52 @@ class CatalogTests(unittest.TestCase):
     def close(self, gap, *args, **kwargs):
         return self.cli('close', '--scope', 'archive', '--id', gap, *args, **kwargs)
 
+    def test_physical_layout_migration_review_and_repeat(self):
+        self.begin()
+        self.cli('begin', '--project', 'routing-sample', '--rules', 'v1',
+                 '--scope', self.scopes[0], '--scope', self.scopes[1], '--layout-scope', 'manual')
+        old = self.root / 'manual' / 'design.md'
+        old.write_text('# 原始需求')
+        home = self.root / 'manual' / 'README.md'
+        home.write_text('[设计](design.md) · [阶段](外环/阶段/A/结果.md)')
+        outer = 'manual/外环/阶段/A/结果.md'
+        inner = 'manual/内环/阶段/A/设计.md'
+        plan = self.base / 'plan.json'
+        doc = dict(directory='manual', keep=['manual/README.md'],
+                   moves={'manual/design.md': inner},
+                   pages={outer: '[依据](../../../内环/阶段/A/设计.md)'},
+                   pairs=[[outer, inner]])
+        plan.write_text(json.dumps(doc))
+        args = ['arrange', '--scope', 'manual', '--plan', str(plan)]
+        self.review('manual', success=False)
+        self.assertIn('manual/design.md', self.cli('inspect', '--scope', 'manual')['files'])
+        self.assertFalse(self.cli(*args)['changed'])
+        self.assertTrue(old.exists())
+        self.cli(*args, '--apply', success=False)
+        recovery = self.base / 'backup.zip'
+        apply = args + ['--apply', '--recovery', str(recovery)]
+        before_apply = self.state.read_bytes()
+        self.assertTrue(self.cli(*apply)['changed'])
+        self.state.write_bytes(before_apply)
+        self.assertTrue(self.cli(*apply)['changed'])
+        self.assertEqual((self.root / inner).read_text(), '# 原始需求')
+        self.assertEqual(home.read_text(), '[设计](内环/阶段/A/设计.md) · [阶段](外环/阶段/A/结果.md)')
+        self.assertFalse(old.exists())
+        self.assertTrue(recovery.is_file())
+        self.assertFalse(self.cli(*apply)['changed'])
+        self.assertTrue(self.review('manual')['scopes']['manual']['complete'])
+        extra = dict(doc, moves={}, pages={}, edits={'manual/README.md': [['[设计]', '[技术设计]']]})
+        extra_plan = self.base / 'extra.json'
+        extra_plan.write_text(json.dumps(extra))
+        next_batch = self.cli('arrange', '--scope', 'manual', '--plan', str(extra_plan),
+                              '--apply', '--recovery', str(self.base / 'extra.zip'))
+        self.assertIn(inner, next_batch['targets'])
+        self.assertFalse(self.cli(*apply)['changed'])
+        old.write_text('新的待归位资料')
+        self.assertFalse(self.cli('status')['scopes']['manual']['complete'])
+        self.cli(*apply, success=False)
+        self.assertEqual(old.read_text(), '新的待归位资料')
+
     def test_restart_resumes_and_task_updates_leave_other_reviews_intact(self):
         blank = self.cli('status')
         self.assertFalse(blank['complete'])

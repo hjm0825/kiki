@@ -1,6 +1,6 @@
 # HuTools 交付状态
 
-源码候选为 0.2.0-rc.5，分支为 `hutools`。本批涉及双环导航、资料绑定、全量与增量状态及缺口处置。[本次使用与验证](catalog-workflow.md)。上批设计交付见 [rc.4 记录](design-workflow.md)。
+源码候选为 0.2.0-rc.6，分支为 `hutools`。本批新增非空工程的实体迁移、工作树恢复包、增量继承和重复运行核验。原有资料绑定与逐项缺口处理继续生效。[本次使用与验证](catalog-workflow.md)。上批设计交付见 [rc.4 记录](design-workflow.md)。
 
 以下为 rc.3 及此前批次的历史结果。
 
