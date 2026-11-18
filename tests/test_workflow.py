@@ -253,6 +253,49 @@ class WorkflowTests(unittest.TestCase):
         (self.root / 'source.txt').write_text('later change')
         status = json.loads(cli('status', '--state', str(state_path)))
         self.assertEqual('needs_revalidation', status['effective_status'])
+        report = cli('report', '--state', str(state_path))
+        self.assertIn('状态：' + status['effective_status'], report)
+        self.assertIn('最近登记结果（历史）', report)
+        self.assertEqual('complete', status['state']['status'])
+
+    def test_relative_state_cli_records_exactly_one_execution(self):
+        (self.root / 'check.py').write_text(
+            "with open('count', 'a') as counter:\n    counter.write('1')\nprint('checked')\n")
+        self.start()
+        result = subprocess.run([sys.executable, '-B', str(MODULE), 'run-check',
+                                 '--state', 'records/task.json', '--case', 'C1'],
+                                cwd=self.root, capture_output=True, text=True)
+        self.assertEqual('1', (self.root / 'count').read_text())
+        self.assertEqual(0, result.returncode, result.stderr)
+        evidence, = w.load_state(self.path)['evidence']
+        self.assertEqual('pass', evidence['outcome'])
+        log = Path(evidence['artifact'])
+        self.assertFalse(log.is_absolute())
+        self.assertEqual('checked\n', (self.root / log).read_text())
+
+    def test_observe_cli_displays_result_and_evidence_alongside_legacy_fragment(self):
+        start = '2026-11-17T10:00:00+08:00'
+        end = '2026-11-17T10:01:00+08:00'
+        old = w.observe(self.path, 'tester', 'legacy', 'work', start, end, 'original call')
+        self.assertNotIn('result', old)
+        artifact = 'records/sample|1.md'
+        (self.root / artifact).write_text('observed')
+        outcome = '复核通过 | 1\n个样例'
+        result = subprocess.run([sys.executable, '-B', str(MODULE), 'observe',
+                                 '--state', 'records/task.json', '--role', 'tester', '--actor', 'observer',
+                                 '--kind', 'work', '--started-at', start, '--ended-at', end,
+                                 '--reason', '复核', '--result', outcome, '--artifact', artifact],
+                                cwd=self.root, capture_output=True, text=True)
+        self.assertEqual(0, result.returncode, result.stderr)
+        details = w.load_state(self.path)['events'][-1]
+        self.assertEqual(outcome, details['result'])
+        self.assertEqual(artifact, details['artifact'])
+        lines = w.report(self.path).splitlines()
+        self.assertIn('未登记', next(line for line in lines if 'legacy' in line))
+        row = next(line for line in lines if 'observer' in line)
+        self.assertIn(r'复核通过 \| 1', row)
+        self.assertIn('个样例', row)
+        self.assertIn(r'records/sample\|1.md', row)
 
 
 

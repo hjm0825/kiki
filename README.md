@@ -2,7 +2,7 @@
 
 安装一次，在工程中选择 HuTools 并输入“运行”。经理确认资料库和目标，按任务范围检查工程，组织需求、设计、开发、验证及资料整理。9 个技能、共同规则、角色说明和模板都在包内；使用工程不必提前准备 AGENTS.md 或额外安装同名技能，有效工程约定仍会沿用。
 
-**当前候选版：0.2.0-rc.2。** 已加入获批研发、任务与证据检查、资料生命周期工具及 hooks。候选实现和本机验证不等于目标客户端安装与保护验收；当前结果和未验项见[交付状态](docs/implementation-status.md)。原 main 分支不变，HuTools 在 hutools 分支维护。
+**当前候选版为 0.2.0-rc.3。** 此版修复相对路径的证据登记、过期任务的报告状态和批量恢复中断后的接续，补齐工作片段结果与技能能力清单。当前版本和实测范围见[首版完整验收](docs/b03-validation.md)。HuTools 在 `hutools` 分支维护。
 
 ## 安装与运行
 
@@ -50,6 +50,7 @@ python3 -m unittest discover -s tests -v
 
 - [完整需求与已确认决定](docs/requirements-and-decisions.md)
 - [B02 实施方案及 M01–M07 清单](docs/b02-plan.md)
+- [B03 实际修复与完整需求验收](docs/b03-validation.md)
 - [当前状态与下一步](docs/implementation-status.md)
 - [验收记录与历史失败](docs/b02-validation.md)
 

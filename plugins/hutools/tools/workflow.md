@@ -43,7 +43,7 @@
 
 ## 命令
 
-令 `WORKFLOW` 指向已安装插件中的 `tools/workflow.py`；`PROJECT` 为已确认工程根，`STATE` 是工程内任务 JSON 的绝对路径。这里只描述命令，不自动创建业务工程。
+令 `WORKFLOW` 指向已安装插件中的 `tools/workflow.py`，`PROJECT` 为已确认工程根。`STATE` 指向工程内的任务 JSON，可传绝对路径或相对调用目录的路径。检查命令从工程根运行，登记的日志路径始终相对工程根，便于整体迁移。
 
 ```bash
 python3 "$WORKFLOW" create --root "$PROJECT" --state "$STATE" --spec "$PROJECT/spec.json"
@@ -67,7 +67,7 @@ python3 "$WORKFLOW" report --state "$STATE"
 
 `planned → approved → running → complete` 为主路径；running 可 paused/failed，paused/failed 在批准仍适用时恢复 running。complete 可转 paused 以复核变更，不支持重复 complete 或直接重新执行检查。批准定义被改动后必须重新取得对应范围确认；paused/failed 可以登记新批准，旧事件保留。
 
-`complete` 前逐项核对必需 case 的最新结果、当前输入/规格指纹、证据文件及独立审查。旧失败不会删除；新版本重测成功只新增证据。已经完成后源码/规则/证据再变化，`status` 的 `effective_status` 返回 `needs_revalidation`，`completion_errors` 说明原因，原记录状态作为历史不被静默改写。读取状态的消费者必须同时调用 `completion_errors`，不能只看字符串 `complete`。
+`complete` 前逐项核对必需 case 的最新结果、当前输入/规格指纹、证据文件及独立审查。新版本重测将追加证据，原有失败记录保留。已完成任务的输入或必要证据发生变化后，`status` 的 `effective_status` 和 `report` 顶部的状态均为 `needs_revalidation`，`completion_errors` 说明原因。报告表格展示每项最近一次登记的历史结果。读取原始状态的消费者可用 `completion_errors` 复核当前有效性。
 
 未知 schema 版本、损坏 JSON、丢失输入和失效引用报可定位错误，不自动迁移或修补原始证据。状态容量超过 8 MiB 时停止追加并要求合理拆分任务，不自动裁剪历史。锁期间运行检查，经理不能用状态切换来假装已停止正在执行的命令；先通过实际进程/宿主工具中断并确认停止，再记录暂停。
 
@@ -76,10 +76,11 @@ python3 "$WORKFLOW" report --state "$STATE"
 ```bash
 python3 "$WORKFLOW" observe --state "$STATE" --role tester --actor worker-2 \
   --kind retry --started-at '2026-11-17T10:00:00+08:00' --ended-at '2026-11-17T10:03:00+08:00' \
-  --reason '实际重试原因及新证据' --artifact records/example-fix-01/retry.md
+  --reason '上次临时样例创建失败，在获准环境重测' \
+  --result '样例运行通过，已核对输出' --artifact records/example-fix-01/retry.md
 ```
 
-时间需带时区、结束不早于开始；示例时间应替换成实际观察。类型为 work/wait/retry。片段与任务事件同存，不另建统计状态；报告保留角色、执行者、起止和原因，明确并行片段不能相加当总耗时。未知耗时/token 不填猜测；记录为 `caller-observation`，不是宿主计费证明。
+时间需带时区，结束不早于开始，示例时间应替换成实际观察。类型为 work/wait/retry。片段与任务事件同存，报告展示角色、执行者、起止、原因、结果及证据路径。`--result` 和 `--artifact` 均可省略，旧片段缺失的项目显示为“未登记”。提供证据时由工具登记文件摘要。并行片段的耗时不能相加当作总耗时，未知的耗时和 token 保持缺测。这些记录的来源为 `caller-observation`。
 
 ## 可导入接口
 

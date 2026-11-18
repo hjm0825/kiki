@@ -137,11 +137,83 @@ class LifecycleTests(unittest.TestCase):
             return rename(source, target)
         with mock.patch.object(self.api.os, 'rename', side_effect=interrupted), self.assertRaises(ValueError):
             self.api.quarantine(self.root, plan, dest, self.api.plan_digest(plan))
-        self.assertEqual('partial', json.loads((dest / 'receipt.json').read_text())['status'])
+        original_receipt = json.loads((dest / 'receipt.json').read_text())
+        self.assertEqual('partial', original_receipt['status'])
         self.assertTrue((dest / 'files/sample.txt').exists())
         self.assertTrue((self.root / 'second.txt').exists())
         self.api.restore(self.root, plan, dest, self.api.plan_digest(plan))
         self.assertTrue(self.api.verify(self.root, plan)['ok'])
+        restored_receipt = json.loads((dest / 'receipt.json').read_text())
+        self.assertEqual('partial', restored_receipt['quarantine_status'])
+        self.assertEqual(original_receipt['error'], restored_receipt['error'])
+        self.assertEqual(original_receipt['completed_paths'], restored_receipt['completed_paths'])
+
+    def quarantine_pair(self):
+        (self.root / 'nested').mkdir()
+        (self.root / 'nested/second.txt').write_text('second evidence')
+        plan = self.api.make_plan(self.root, 'p', 't', [
+            self.metadata(), self.metadata(path='nested/second.txt')])
+        dest = self.base / 'quarantine'
+        self.api.quarantine(self.root, plan, dest, self.api.plan_digest(plan))
+        return plan, dest
+
+    def test_restore_cli_preflights_later_target_ancestors(self):
+        plan, dest = self.quarantine_pair()
+        before = (dest / 'receipt.json').read_bytes()
+        occupied = self.root / 'nested'
+        occupied.rmdir()
+        occupied.write_text('user file')
+        result = subprocess.run([sys.executable, '-B', str(SCRIPT), 'restore',
+                                 '--root', str(self.root), '--plan', str(dest / 'plan.json'),
+                                 '--destination', str(dest), '--confirm', self.api.plan_digest(plan)],
+                                capture_output=True, text=True)
+        self.assertNotEqual(0, result.returncode)
+        self.assertFalse(json.loads(result.stdout)['ok'])
+        self.assertTrue(self.api.verify(dest / 'files', plan)['ok'])
+        self.assertFalse((self.root / 'sample.txt').exists())
+        self.assertEqual('user file', occupied.read_text())
+        self.assertEqual(before, (dest / 'receipt.json').read_bytes())
+
+    def test_interrupted_restore_records_progress_and_resumes_v1_quarantine(self):
+        plan, dest = self.quarantine_pair()
+        token = self.api.plan_digest(plan)
+        receipt_path = dest / 'receipt.json'
+        old = json.loads(receipt_path.read_text())
+        self.assertNotIn('restore_attempts', old)
+        original_rename = self.api.os.rename
+
+        def interrupt_second(source, target):
+            if source.name == 'second.txt':
+                raise OSError('simulated restore I/O error')
+            original_rename(source, target)
+
+        with mock.patch.object(self.api.os, 'rename', side_effect=interrupt_second):
+            with self.assertRaises((ValueError, OSError)):
+                self.api.restore(self.root, plan, dest, token)
+        self.assertEqual('original evidence\n', (self.root / 'sample.txt').read_text())
+        self.assertEqual('second evidence', (dest / 'files/nested/second.txt').read_text())
+        partial = json.loads(receipt_path.read_text())
+        self.assertEqual('restore-partial', partial['status'])
+        self.assertEqual(old['status'], partial['quarantine_status'])
+        self.assertEqual(old['completed_paths'], partial['completed_paths'])
+        self.assertEqual(old['finished_at'], partial['finished_at'])
+        attempt = partial['restore_attempts'][0]
+        self.assertEqual(['sample.txt'], attempt['moved_paths'])
+        self.assertIn('simulated restore I/O error', attempt['error'])
+
+        (self.root / 'nested/second.txt').write_text('new user file')
+        with self.assertRaises(ValueError):
+            self.api.restore(self.root, plan, dest, token)
+        self.assertEqual('new user file', (self.root / 'nested/second.txt').read_text())
+        (self.root / 'nested/second.txt').unlink()
+        self.assertEqual(1, self.api.restore(self.root, plan, dest, token)['restored'])
+        self.assertTrue(self.api.verify(self.root, plan)['ok'])
+        final = json.loads(receipt_path.read_text())
+        self.assertEqual('restored', final['status'])
+        self.assertEqual(attempt, final['restore_attempts'][0])
+        self.assertEqual(['nested/second.txt'], final['restore_attempts'][1]['moved_paths'])
+        self.assertEqual(0, self.api.restore(self.root, plan, dest, token)['restored'])
+        self.assertEqual(final, json.loads(receipt_path.read_text()))
 
     def test_archive_io_failure_keeps_original_and_partial_receipt(self):
         plan = self.plan()
@@ -151,6 +223,68 @@ class LifecycleTests(unittest.TestCase):
                 self.api.archive(self.root, plan, dest)
         self.assertTrue(self.api.verify(self.root, plan)['ok'])
         self.assertEqual('partial', json.loads((dest / 'receipt.json').read_text())['status'])
+
+    def test_large_v1_receipt_stays_recoverable_after_restore_io_failure(self):
+        plan, dest = self.quarantine_pair()
+        receipt_path = dest / 'receipt.json'
+        limit = 5 * 1024 * 1024
+        legacy = json.loads(receipt_path.read_text())
+        legacy.update(status='partial', error='old failure')
+        padding = limit - len((json.dumps(legacy, indent=2) + '\n').encode()) - 1
+        legacy['error'] += 'x' * padding
+        self.api.write_json(receipt_path, legacy)
+        self.assertLessEqual(receipt_path.stat().st_size, limit)
+        original_rename = self.api.os.rename
+
+        def interrupt_second(source, target):
+            if source.name == 'second.txt':
+                raise OSError('second move failed')
+            original_rename(source, target)
+
+        token = self.api.plan_digest(plan)
+        with mock.patch.object(self.api.os, 'rename', side_effect=interrupt_second):
+            with self.assertRaises(ValueError):
+                self.api.restore(self.root, plan, dest, token)
+        self.assertTrue((self.root / 'sample.txt').exists())
+        self.assertTrue((dest / 'files/nested/second.txt').exists())
+        head = self.api.load_json(receipt_path)
+        self.assertEqual('restore-partial', head['status'])
+        detail = dest / head['restore_detail']
+        detail_bytes = detail.read_bytes()
+        archived = json.loads(detail_bytes)
+        self.assertEqual(legacy['error'], archived['error'])
+        self.assertEqual(['sample.txt'], archived['restore_attempts'][-1]['moved_paths'])
+        self.assertIn('second move failed', archived['restore_attempts'][-1]['error'])
+        with self.assertRaises(ValueError):
+            self.api.load_json(detail)
+        self.assertEqual(1, self.api.restore(self.root, plan, dest, token)['restored'])
+        self.assertTrue(self.api.verify(self.root, plan)['ok'])
+        self.assertEqual(detail.name, self.api.load_json(receipt_path)['restore_detail'])
+        self.assertEqual(detail_bytes, detail.read_bytes())
+
+    def test_repeated_restore_failures_keep_complete_history_in_order(self):
+        plan, dest = self.quarantine_pair()
+        token = self.api.plan_digest(plan)
+        messages = [f'failure {i}: ' + 'x' * 230 for i in range(6)]
+        # 缩短分段阈值，核验多代历史链；5 MiB 真实边界由上例覆盖。
+        with mock.patch.object(self.api, 'MAX_JSON_BYTES', 1024):
+            for message in messages:
+                with mock.patch.object(self.api.os, 'rename', side_effect=OSError(message)):
+                    with self.assertRaises(ValueError):
+                        self.api.restore(self.root, plan, dest, token)
+                self.assertLessEqual((dest / 'receipt.json').stat().st_size, 1024)
+            self.assertEqual(2, self.api.restore(self.root, plan, dest, token)['restored'])
+            current = self.api.load_json(dest / 'receipt.json')
+        sections = [current]
+        while 'restore_detail' in current:
+            current = json.loads((dest / current['restore_detail']).read_text())
+            sections.append(current)
+            self.assertLessEqual(len(sections), len(messages) + 2)
+        self.assertGreater(len(sections), 2)
+        errors = [attempt['error'] for section in reversed(sections)
+                  for attempt in section.get('restore_attempts', []) if 'error' in attempt]
+        self.assertEqual(messages, errors)
+        self.assertTrue(self.api.verify(self.root, plan)['ok'])
 
     def test_restored_directory_does_not_reauthorize_fresh_files(self):
         plan = self.plan()

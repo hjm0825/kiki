@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "project_root": "../..",
+  "spec": {
+    "task_id": "HUTOOLS-B03-20261118",
+    "rules_version": "0.2.0-rc.3",
+    "source_version": "d900c85 + B03; delivered inputs bound by SHA-256",
+    "author": "b03-implementation-team",
+    "requirements": [
+      "package",
+      "functional",
+      "independent-review",
+      "entry-install",
+      "behavior-trials"
+    ],
+    "inputs": [
+      ".agents/plugins/marketplace.json",
+      "plugins/hutools/.codex-plugin/plugin.json",
+      "plugins/hutools/AGENTS.md",
+      "plugins/hutools/LICENSE",
+      "plugins/hutools/THIRD_PARTY_NOTICES.md",
+      "plugins/hutools/hooks/README.md",
+      "plugins/hutools/hooks/guard.py",
+      "plugins/hutools/hooks/hooks.json",
+      "plugins/hutools/licenses/mattpocock-MIT.txt",
+      "plugins/hutools/skills/code-review/SKILL.md",
+      "plugins/hutools/skills/codebase-design/SKILL.md",
+      "plugins/hutools/skills/diagnosing-bugs/SKILL.md",
+      "plugins/hutools/skills/domain-modeling/SKILL.md",
+      "plugins/hutools/skills/grill-with-docs/SKILL.md",
+      "plugins/hutools/skills/grilling/SKILL.md",
+      "plugins/hutools/skills/hutools/SKILL.md",
+      "plugins/hutools/skills/hutools/agents/openai.yaml",
+      "plugins/hutools/skills/hutools/assets/problem-report.md",
+      "plugins/hutools/skills/hutools/assets/project-context.md",
+      "plugins/hutools/skills/hutools/assets/task.md",
+      "plugins/hutools/skills/hutools/references/analysis.md",
+      "plugins/hutools/skills/hutools/references/development.md",
+      "plugins/hutools/skills/hutools/references/intake.md",
+      "plugins/hutools/skills/hutools/references/materials.md",
+      "plugins/hutools/skills/hutools/references/observation.md",
+      "plugins/hutools/skills/hutools/references/roles.md",
+      "plugins/hutools/skills/hutools/references/rule-map.md",
+      "plugins/hutools/skills/hutools/references/rules.md",
+      "plugins/hutools/skills/research/SKILL.md",
+      "plugins/hutools/skills/tdd/SKILL.md",
+      "plugins/hutools/sources.lock.json",
+      "plugins/hutools/tools/lifecycle.md",
+      "plugins/hutools/tools/lifecycle.py",
+      "plugins/hutools/tools/workflow.md",
+      "plugins/hutools/tools/workflow.py",
+      "scripts/check_bundle.py",
+      "tests/test_bundle.py",
+      "tests/test_guard.py",
+      "tests/test_lifecycle.py",
+      "tests/test_workflow.py"
+    ],
+    "writable_paths": [
+      "validation/b03"
+    ],
+    "requires_independent_review": true,
+    "cases": [
+      {
+        "id": "bundle",
+        "requirement": "package",
+        "kind": "command",
+        "argv": [
+          "python3",
+          "-B",
+          "scripts/check_bundle.py"
+        ],
+        "timeout_seconds": 30
+      },
+      {
+        "id": "tests",
+        "requirement": "functional",
+        "kind": "command",
+        "argv": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-v"
+        ],
+        "timeout_seconds": 60
+      },
+      {
+        "id": "review",
+        "requirement": "independent-review",
+        "kind": "review"
+      },
+      {
+        "id": "entry-install",
+        "requirement": "entry-install",
+        "kind": "manual"
+      },
+      {
+        "id": "behavior-trials",
+        "requirement": "behavior-trials",
+        "kind": "manual"
+      }
+    ]
+  },
+  "status": "complete",
+  "approval": {
+    "actor": "user",
+    "decision": "本轮 B03 修改前方案及用户卡片答复：批准 B03 整批实施；范围见 docs/b03-validation.md。",
+    "at": "2026-11-18T02:03:35.066430+00:00",
+    "spec_sha256": "587ccfd86c882db9712f87e8db2be58cd15d7a818dec9ef3902ece804542c6d3",
+    "trust": "recorded_external_decision"
+  },
+  "events": [
+    {
+      "at": "2026-11-18T02:03:34.791779+00:00",
+      "type": "created"
+    },
+    {
+      "at": "2026-11-18T02:03:35.066512+00:00",
+      "type": "approved",
+      "actor": "user",
+      "decision": "本轮 B03 修改前方案及用户卡片答复：批准 B03 整批实施；范围见 docs/b03-validation.md。"
+    },
+    {
+      "at": "2026-11-18T02:03:35.348705+00:00",
+      "type": "transition",
+      "previous": "approved",
+      "target": "running",
+      "reason": "已分配工作流与资料恢复实现，入口及协作验收独立执行。"
+    },
+    {
+      "at": "2026-11-18T02:11:37.901239+00:00",
+      "type": "fragment",
+      "id": "2c852a642fb34fdc8c9a28235212a139",
+      "role": "经理",
+      "actor": "codex",
+      "kind": "work",
+      "started_at": "2026-11-18T09:56:41+08:00",
+      "ended_at": "2026-11-18T10:00:45+08:00",
+      "reason": "接续全量目标、对照 B02、核对实现缺口与批次批准",
+      "source": "caller-observation",
+      "result": "两项正常操作缺陷及报告问题经复现；用户一次批准 B03 范围。"
+    },
+    {
+      "at": "2026-11-18T02:11:37.904073+00:00",
+      "type": "fragment",
+      "id": "6079150a31174fa08e4eaac7aa9b47b6",
+      "role": "测试",
+      "actor": "behavior_trials",
+      "kind": "work",
+      "started_at": "2026-11-18T09:59:26.511+08:00",
+      "ended_at": "2026-11-18T10:00:40.079+08:00",
+      "reason": "验证父子仓提交范围并复核 dirty 疑点",
+      "source": "caller-observation",
+      "result": "两次精确提交，原暂存 blob 与未暂存文件摘要保持一致。",
+      "artifact": "validation/b03/trials.json",
+      "artifact_sha256": "ff8e6b007cc57f129f3d40e368650b09dba506090d1a2ab2e2fd5673a336e7c6"
+    },
+    {
+      "at": "2026-11-18T02:11:37.906395+00:00",
+      "type": "fragment",
+      "id": "1fa4be3cd1174670bbae07d6735e37b3",
+      "role": "开发",
+      "actor": "workflow_review",
+      "kind": "work",
+      "started_at": "2026-11-18T10:00:39+08:00",
+      "ended_at": "2026-11-18T10:03:17+08:00",
+      "reason": "修复相对路径、报告有效状态及工作片段输出",
+      "source": "caller-observation",
+      "result": "3 条预期红态；26 条工作流回归通过。"
+    },
+    {
+      "at": "2026-11-18T02:11:37.908534+00:00",
+      "type": "fragment",
+      "id": "b6428eb3913c4051b988f1f624a87c5d",
+      "role": "开发",
+      "actor": "scope_audit",
+      "kind": "work",
+      "started_at": "2026-11-18T10:01:09+08:00",
+      "ended_at": "2026-11-18T10:04:03+08:00",
+      "reason": "修复全量恢复预检与部分恢复记录",
+      "source": "caller-observation",
+      "result": "首次默认沙箱样例创建失败；独立模块测试先出现 2 项功能红态，修复后 20 项通过，后续容量问题另行处理。"
+    },
+    {
+      "at": "2026-11-18T02:15:20.679498+00:00",
+      "type": "check",
+      "case_id": "tests",
+      "evidence_id": "3d46396c833e4bf2ab6713f70907a7be",
+      "outcome": "pass"
+    },
+    {
+      "at": "2026-11-18T02:16:32.326484+00:00",
+      "type": "check",
+      "case_id": "bundle",
+      "evidence_id": "a50699a54d0d4d519a96f908fb88bb95",
+      "outcome": "pass"
+    },
+    {
+      "at": "2026-11-18T02:16:50.428728+00:00",
+      "type": "attestation",
+      "case_id": "review",
+      "evidence_id": "01fb1e89779145938029b7d2ad9c06eb",
+      "actor": "host_review"
+    },
+    {
+      "at": "2026-11-18T02:16:50.440870+00:00",
+      "type": "attestation",
+      "case_id": "entry-install",
+      "evidence_id": "53c06fd97d654df89fcf6edc5e4bbf2d",
+      "actor": "codex-install-qa"
+    },
+    {
+      "at": "2026-11-18T02:16:50.453307+00:00",
+      "type": "attestation",
+      "case_id": "behavior-trials",
+      "evidence_id": "57d6e975430c4039ad108acc2f0a490c",
+      "actor": "behavior_trials"
+    },
+    {
+      "at": "2026-11-18T02:16:50.465645+00:00",
+      "type": "transition",
+      "previous": "running",
+      "target": "complete",
+      "reason": "最终输入上的五项必需验收均有通过证据。外部发布和个人安装另行核实。"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "3d46396c833e4bf2ab6713f70907a7be",
+      "at": "2026-11-18T02:15:20.679385+00:00",
+      "case_id": "tests",
+      "kind": "command",
+      "collector": "run-check",
+      "actor": "b03-implementation-team",
+      "outcome": "pass",
+      "returncode": 0,
+      "reason": "exit",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "duration_seconds": 5.520652,
+      "output_limit_bytes": 1048576,
+      "artifact": "validation/b03/task-evidence/241d85c61e384efeafa21ddb01c1f886.log",
+      "artifact_sha256": "44c2cada2f63a6e0c1dc5acb54bc4fd5671bf777b55fa902be3e491b5cf2c89b",
+      "input_sha256": "1d09b99f7b55412668394a22a873a1873ec1096356c40fb49e7fea1ced16e19a",
+      "after_input_sha256": "1d09b99f7b55412668394a22a873a1873ec1096356c40fb49e7fea1ced16e19a",
+      "spec_sha256": "587ccfd86c882db9712f87e8db2be58cd15d7a818dec9ef3902ece804542c6d3"
+    },
+    {
+      "id": "a50699a54d0d4d519a96f908fb88bb95",
+      "at": "2026-11-18T02:16:32.325879+00:00",
+      "case_id": "bundle",
+      "kind": "command",
+      "collector": "run-check",
+      "actor": "b03-implementation-team",
+      "outcome": "pass",
+      "returncode": 0,
+      "reason": "exit",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/check_bundle.py"
+      ],
+      "duration_seconds": 0.120997,
+      "output_limit_bytes": 1048576,
+      "artifact": "validation/b03/task-evidence/70c0d0d7d7b843dba1652b309d923b55.log",
+      "artifact_sha256": "9bf5d597ef1cce6c355e1727229cc29f9433e59b89ec5ce3fdd64387b7217581",
+      "input_sha256": "1d09b99f7b55412668394a22a873a1873ec1096356c40fb49e7fea1ced16e19a",
+      "after_input_sha256": "1d09b99f7b55412668394a22a873a1873ec1096356c40fb49e7fea1ced16e19a",
+      "spec_sha256": "587ccfd86c882db9712f87e8db2be58cd15d7a818dec9ef3902ece804542c6d3"
+    },
+    {
+      "id": "01fb1e89779145938029b7d2ad9c06eb",
+      "at": "2026-11-18T02:16:50.419912+00:00",
+      "case_id": "review",
+      "kind": "review",
+      "collector": "human-attestation",
+      "actor": "host_review",
+      "outcome": "pass",
+      "statement": "独立 reviewer 复核工作流、旧片段、能力清单、恢复 I/O 和临界回执；曾退回容量阻塞，最终两次中断的大回执链和幂等恢复复验通过。",
+      "artifact": "docs/b03-validation.md",
+      "artifact_sha256": "7da04a1f2a0cf7517955f39b02406c5bf861d3d3417f214b9063f9d187ad161d",
+      "input_sha256": "1d09b99f7b55412668394a22a873a1873ec1096356c40fb49e7fea1ced16e19a",
+      "spec_sha256": "587ccfd86c882db9712f87e8db2be58cd15d7a818dec9ef3902ece804542c6d3"
+    },
+    {
+      "id": "53c06fd97d654df89fcf6edc5e4bbf2d",
+      "at": "2026-11-18T02:16:50.432160+00:00",
+      "case_id": "entry-install",
+      "kind": "manual",
+      "collector": "human-attestation",
+      "actor": "codex-install-qa",
+      "outcome": "pass",
+      "statement": "CLI 0.155.1 真实安装 34 个文件逐字节一致。全新配置发现三钩子待审阅；真实模型选择已安装技能，仅输入运行，原生两轮卡片答复后完成咨询。安装件 CLI 与 Stop/工作流联动通过。",
+      "artifact": "docs/b03-validation.md",
+      "artifact_sha256": "7da04a1f2a0cf7517955f39b02406c5bf861d3d3417f214b9063f9d187ad161d",
+      "input_sha256": "1d09b99f7b55412668394a22a873a1873ec1096356c40fb49e7fea1ced16e19a",
+      "spec_sha256": "587ccfd86c882db9712f87e8db2be58cd15d7a818dec9ef3902ece804542c6d3"
+    },
+    {
+      "id": "57d6e975430c4039ad108acc2f0a490c",
+      "at": "2026-11-18T02:16:50.443928+00:00",
+      "case_id": "behavior-trials",
+      "kind": "manual",
+      "collector": "human-attestation",
+      "actor": "behavior_trials",
+      "outcome": "pass",
+      "statement": "隔离两仓精确提交，误报复核和解除，实际子进程等待，同一项目 A/B 状态隔离及六提案独立裁决；真实 HuTools 修复过程另见工作片段及验收文档。",
+      "artifact": "validation/b03/trials.json",
+      "artifact_sha256": "ff8e6b007cc57f129f3d40e368650b09dba506090d1a2ab2e2fd5673a336e7c6",
+      "input_sha256": "1d09b99f7b55412668394a22a873a1873ec1096356c40fb49e7fea1ced16e19a",
+      "spec_sha256": "587ccfd86c882db9712f87e8db2be58cd15d7a818dec9ef3902ece804542c6d3"
+    }
+  ],
+  "created_at": "2026-11-18T02:03:34.791775+00:00",
+  "updated_at": "2026-11-18T02:16:50.465710+00:00"
+}

@@ -1,6 +1,10 @@
 # HuTools 交付包与恢复
 
-本批候选：0.2.0-rc.2，日期2026-11-17。完整源码包为 `HuTools-0.2.0-rc.2-full.zip`，对应源码提交和 SHA-256 在随包 `delivery.json` 与 `SHA256SUMS` 中登记。
+当前候选为 `0.2.0-rc.3`。2026-11-18 的源代码、行为验收、安装结果和恢复边界见[B03 验收](../docs/b03-validation.md)及[本批任务](../validation/b03/task.json)。对新版本复核状态时使用 `validation/b03/task.json`，发布归档的校验值记在 `SHA256SUMS`。
+
+## rc.2 历史交付
+
+候选版本为 0.2.0-rc.2，日期为 2026-11-17。完整源码包为 `HuTools-0.2.0-rc.2-full.zip`，对应源码提交和 SHA-256 在随包 `delivery.json` 与 `SHA256SUMS` 中登记。
 
 完整包包含独立插件（9技能、规则、角色、模板、Python工具与hooks）、已确认需求Q1–Q26/D01–D17、B02完整方案M01–M07、源码及测试、版本化任务/原始检查日志、独立审查、复现实例和补充材料归档。必要运行资源全部位于 `plugins/hutools`，不依赖本机临时目录。
 

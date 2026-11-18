@@ -10,8 +10,10 @@ import shutil
 import stat
 import sys
 import tempfile
+from uuid import uuid4
 
 SCHEMA_VERSION = 1
+MAX_JSON_BYTES = 5 * 1024 * 1024
 CATEGORIES = {'core', 'evidence', 'rebuildable', 'process', 'unknown'}
 FLAGS = ('unique', 'unresolved_failure', 'active', 'recovery_required',
          'retention_satisfied', 'reproducible')
@@ -50,6 +52,8 @@ def safe_path(root, relative, must_exist=True):
     rel = relative_path(relative)
     current = root
     for part in rel.parts:
+        if current.exists() and not current.is_dir():
+            raise ValueError(f'路径祖先不是目录：{current.relative_to(root)}')
         current /= part
         if current.is_symlink():
             raise ValueError(f'拒绝符号链接：{relative}')
@@ -177,12 +181,12 @@ def cleanup_plan(root, plan):
 
 def load_json(path):
     path = Path(path).absolute()
-    if any(p.is_symlink() for p in [path, *path.parents]) or not path.is_file() or path.stat().st_size > 5 * 1024 * 1024:
+    if any(p.is_symlink() for p in [path, *path.parents]) or not path.is_file() or path.stat().st_size > MAX_JSON_BYTES:
         raise ValueError('JSON 必须是普通文件，大小不超过 5 MiB')
     return json.loads(path.read_text(encoding='utf-8'))
 
 
-def write_json(path, data, exclusive=False):
+def write_json(path, data, exclusive=False, *, max_bytes=None):
     path = Path(path)
     if not path.parent.is_dir() or path.is_symlink() or any(p.is_symlink() for p in [path.parent, *path.parent.parents]):
         raise ValueError('输出目录必须已存在且不能通过符号链接写入')
@@ -199,6 +203,8 @@ def write_json(path, data, exclusive=False):
             json.dump(data, stream, ensure_ascii=False, indent=2)
             stream.write('\n')
             stream.flush()
+            if max_bytes is not None and os.fstat(stream.fileno()).st_size > max_bytes:
+                raise OverflowError('JSON 超过主回执的读取上限')
             os.fsync(stream.fileno())
         os.replace(temp, path)
     finally:
@@ -310,11 +316,33 @@ def quarantine(root, plan, destination, token):
         raise ValueError('隔离未完成，未自动回滚或删除；根据精确清单检查原位置/隔离位置后 restore') from exc
 
 
+def write_restore_progress(path, receipt, detail_path):
+    """主回执须可直接重读。超出的历史仅供审阅，续接始终核验两侧文件。"""
+    if not detail_path.exists():
+        try:
+            write_json(path, receipt, max_bytes=MAX_JSON_BYTES)
+            return
+        except OverflowError:
+            pass
+    # 同一次尝试更新同一详情；每次重试使用新路径，保留前一尝试及其历史链接。
+    write_json(detail_path, receipt)
+    head = {'schema_version': SCHEMA_VERSION, 'operation': 'quarantine',
+            'plan_sha256': receipt['plan_sha256'], 'status': receipt['status'],
+            'restore_detail': detail_path.name,
+            'moved_in_attempt': len(receipt['restore_attempts'][-1]['moved_paths'])}
+    if receipt.get('quarantine_status') in ('in-progress', 'partial', 'complete'):
+        head['quarantine_status'] = receipt['quarantine_status']
+    if receipt['status'] == 'restored':
+        head['restored_at'] = receipt['restored_at']
+    write_json(path, head)
+
+
 def restore(root, plan, quarantine_dir, token):
     confirmation(plan, token)
     root = root_path(root)
     directory = root_path(quarantine_dir)
-    receipt = load_json(safe_path(directory, 'receipt.json'))
+    receipt_path = safe_path(directory, 'receipt.json')
+    receipt = load_json(receipt_path)
     if receipt.get('operation') != 'quarantine' or receipt.get('plan_sha256') != plan_digest(plan):
         raise ValueError('恢复目录不属于该隔离清单')
     moves = []
@@ -326,22 +354,51 @@ def restore(root, plan, quarantine_dir, token):
         if source.exists():
             if target.exists() or fingerprint(source) != expected:
                 raise ValueError('恢复位置冲突或隔离文件已变化，保持原位')
-            if source.stat().st_dev != root.stat().st_dev:
+            # 目标的最近已存在父目录决定移动是否跨盘。
+            parent = next(p for p in target.parents if p.exists())
+            if source.stat().st_dev != parent.stat().st_dev:
                 raise ValueError('恢复仅支持同文件系统')
-            moves.append((source, target))
+            moves.append((record['path'], source, target))
         elif not target.exists() or fingerprint(target) != expected:
             raise ValueError('原位置和隔离位置不能确认完整资产，停止恢复')
-    for source, target in moves:
-        target.parent.mkdir(parents=True, exist_ok=True)
-        if target.exists():
-            raise ValueError('恢复期间出现目标冲突；已恢复文件保留，重新核对后续接')
-        os.rename(source, target)
-    result = verify(root, plan)
-    if not result['ok']:
-        raise ValueError('恢复后核验失败，保留两侧资产并人工复核')
-    receipt.update(status='restored', restored_at=now())
-    write_json(directory / 'receipt.json', receipt)
-    return {'ok': True, 'operation': 'restore', 'restored': len(moves), 'plan_sha256': plan_digest(plan)}
+    result = {'ok': True, 'operation': 'restore', 'restored': len(moves),
+              'plan_sha256': receipt['plan_sha256']}
+    if not moves and receipt.get('status') == 'restored':
+        return result
+
+    # 保留隔离完成/中断时的证据。每次恢复单独记录，以便重试后仍能追溯失败。
+    if receipt.get('status') in ('in-progress', 'partial', 'complete'):
+        receipt.setdefault('quarantine_status', receipt['status'])
+    attempts = receipt.setdefault('restore_attempts', [])
+    if not isinstance(attempts, list):
+        raise ValueError('恢复回执的 restore_attempts 必须是列表')
+    attempt = {'started_at': now(), 'status': 'restoring', 'moved_paths': []}
+    attempts.append(attempt)
+    receipt['status'] = 'restoring'
+    receipt.pop('moved_in_attempt', None)
+    detail_path = directory / f'restore-history-{uuid4().hex}.json'
+    if detail_path.exists() or detail_path.is_symlink():
+        raise ValueError('恢复详情路径冲突')
+    write_restore_progress(receipt_path, receipt, detail_path)
+    try:
+        for relative, source, target in moves:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.exists() or target.is_symlink():
+                raise ValueError(f'恢复期间出现目标冲突：{relative}')
+            os.rename(source, target)
+            attempt['moved_paths'].append(relative)
+            write_restore_progress(receipt_path, receipt, detail_path)
+        if not verify(root, plan)['ok']:
+            raise ValueError('恢复后核验失败，保留两侧资产并人工复核')
+        attempt.update(status='restored', finished_at=now())
+        finished = {**receipt, 'status': 'restored', 'restored_at': attempt['finished_at']}
+        write_restore_progress(receipt_path, finished, detail_path)
+    except (ValueError, OSError) as exc:
+        attempt.update(status='restore-partial', error=str(exc), finished_at=now())
+        receipt['status'] = 'restore-partial'
+        write_restore_progress(receipt_path, receipt, detail_path)
+        raise ValueError('恢复未完成；保留两侧文件，根据清单核对后可再次 restore') from exc
+    return result
 
 
 def main(argv=None):

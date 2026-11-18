@@ -4,6 +4,7 @@ import argparse
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import hashlib
+import html
 import json
 import os
 from pathlib import Path
@@ -156,11 +157,12 @@ def require_approval(state):
 
 def snapshot(root, spec, state_path):
     """绑定明确输入集合；禁止把自己的状态/证据目录纳入输入造成自引用。"""
+    state_path = no_links(state_path)
     files = {}
-    evidence_dir = Path(state_path).parent
+    evidence_dir = state_path.parent
     for item in spec['inputs']:
         path = relative_path(root, item, must_exist=True)
-        if path == evidence_dir or evidence_dir.is_relative_to(path) or path == Path(state_path):
+        if path == evidence_dir or evidence_dir.is_relative_to(path) or path == state_path:
             raise WorkflowError('inputs 不能覆盖任务/证据目录，请列具体源码及规则输入')
         if not path.is_file() and not path.is_dir():
             raise WorkflowError(f'不接受特殊输入文件：{path}')
@@ -412,7 +414,7 @@ def _execute(argv, cwd, logfile, timeout):
 
 
 def run_check(state_path, case_id):
-    path = Path(state_path)
+    path = no_links(state_path)
     with locked(path):
         state = load_state(path)
         require_approval(state)
@@ -485,10 +487,12 @@ def record_evidence(state_path, case_id, actor, artifact, outcome, statement):
 
 
 
-def observe(state_path, role, actor, kind, started_at, ended_at, reason, artifact=None):
+def observe(state_path, role, actor, kind, started_at, ended_at, reason, artifact=None, result=None):
     """只登记真实观测片段；时间与角色身份由调用方提供，不冒充宿主计费统计。"""
     if kind not in ('work', 'wait', 'retry') or not role.strip() or not actor.strip() or not reason.strip():
         raise WorkflowError('片段需 role/actor、work|wait|retry 和实际原因')
+    if result is not None and (not isinstance(result, str) or not result.strip()):
+        raise WorkflowError('片段结果须为非空文本，未知时可省略')
     try:
         start = datetime.fromisoformat(started_at.replace('Z', '+00:00'))
         end = datetime.fromisoformat(ended_at.replace('Z', '+00:00'))
@@ -501,6 +505,8 @@ def observe(state_path, role, actor, kind, started_at, ended_at, reason, artifac
         details = {'id': uuid.uuid4().hex, 'role': role, 'actor': actor, 'kind': kind,
                    'started_at': started_at, 'ended_at': ended_at, 'reason': reason,
                    'source': 'caller-observation'}
+        if result is not None:
+            details['result'] = result
         if artifact is not None:
             root = project_root(state_path, state)
             details.update(artifact=artifact, artifact_sha256=artifact_hash(root, artifact))
@@ -509,26 +515,47 @@ def observe(state_path, role, actor, kind, started_at, ended_at, reason, artifac
     return details
 
 
-def report(state_path):
+def status_view(state_path):
     state = load_state(state_path)
-    errors = completion_errors(state_path)
-    lines = [f"# {state['spec']['task_id']}", '', f"状态：{state['status']}",
+    errors = _completion_errors(state_path, state)
+    effective = 'needs_revalidation' if state['status'] == 'complete' and errors else state['status']
+    return {'state': state, 'effective_status': effective, 'completion_errors': errors}
+
+
+def table_row(*cells):
+    """自由文本和路径按字面值显示，多行内容保留在同一表格单元。"""
+    escaped = []
+    for cell in cells:
+        value = html.escape(cell, quote=False)
+        for mark in ('\\', '|', '`', '*', '_', '[', ']', '~'):
+            value = value.replace(mark, '\\' + mark)
+        escaped.append('<br>'.join(value.splitlines()))
+    return '| ' + ' | '.join(escaped) + ' |'
+
+
+def report(state_path):
+    view = status_view(state_path)
+    state, errors = view['state'], view['completion_errors']
+    lines = [f"# {state['spec']['task_id']}", '', f"状态：{view['effective_status']}",
              f"规则版本：{state['spec']['rules_version']}",
              f"来源版本：{state['spec']['source_version']}", '',
              '本报告是任务状态的阅读视图；人工证据与授权仍需核对真实来源。', '',
-             '| 验收项 | 需求 | 类型 | 最新结果 |', '| --- | --- | --- | --- |']
+             '| 验收项 | 需求 | 类型 | 最近登记结果（历史） |', '| --- | --- | --- | --- |']
     for case in state['spec']['cases']:
         matches = [e for e in state['evidence'] if e.get('case_id') == case['id']]
         result = matches[-1]['outcome'] if matches else '待验证'
-        lines.append(f"| {case['id']} | {case['requirement']} | {case['kind']} | {result} |")
+        lines.append(table_row(case['id'], case['requirement'], case['kind'], result))
     lines += ['', '当前交付检查：' + ('通过（限声明输入与验收项）' if not errors else '未通过'), '']
     lines += ['- ' + error for error in errors]
     fragments = [e for e in state['events'] if e.get('type') == 'fragment']
     if fragments:
         lines += ['', '## 已记录工作片段', '', '以下是调用者提供的实际观察；并行片段不能相加当作总耗时，未观测时间和 token 不补算。', '',
-                  '| 角色/执行者 | 类型 | 开始 | 结束 | 原因 |', '| --- | --- | --- | --- | --- |']
+                  '| 角色/执行者 | 类型 | 开始 | 结束 | 原因 | 结果 | 证据 |',
+                  '| --- | --- | --- | --- | --- | --- | --- |']
         for fragment in fragments:
-            lines.append(f"| {fragment['role']}/{fragment['actor']} | {fragment['kind']} | {fragment['started_at']} | {fragment['ended_at']} | {fragment['reason']} |")
+            lines.append(table_row(f"{fragment['role']}/{fragment['actor']}", fragment['kind'],
+                                   fragment['started_at'], fragment['ended_at'], fragment['reason'],
+                                   fragment.get('result', '未登记'), fragment.get('artifact', '未登记')))
     return '\n'.join(lines) + '\n'
 
 
@@ -551,6 +578,7 @@ def main(argv=None):
             for field in ('role', 'actor', 'kind', 'started-at', 'ended-at', 'reason'):
                 sub.add_argument('--' + field, required=True)
             sub.add_argument('--artifact')
+            sub.add_argument('--result', help='实际观察结果，未知时省略')
         elif name in ('run-check', 'evidence'):
             sub.add_argument('--case', required=True)
             if name == 'evidence':
@@ -571,15 +599,13 @@ def main(argv=None):
         elif args.command == 'evidence':
             result = record_evidence(args.state, args.case, args.actor, args.artifact, args.outcome, args.statement)
         elif args.command == 'observe':
-            result = observe(args.state, args.role, args.actor, args.kind, args.started_at, args.ended_at, args.reason, args.artifact)
+            result = observe(args.state, args.role, args.actor, args.kind, args.started_at,
+                             args.ended_at, args.reason, args.artifact, result=args.result)
         elif args.command == 'report':
             print(report(args.state), end='')
             return 0
         else:
-            state = load_state(args.state)
-            errors = completion_errors(args.state)
-            effective = 'needs_revalidation' if state['status'] == 'complete' and errors else state['status']
-            result = {'state': state, 'effective_status': effective, 'completion_errors': errors}
+            result = status_view(args.state)
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 1 if args.command == 'run-check' and result['outcome'] != 'pass' else 0
     except (WorkflowError, OSError) as exc:

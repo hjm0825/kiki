@@ -1,0 +1,379 @@
+{
+  "git": {
+    "observations": [
+      {
+        "at": "2026-11-18T09:59:26.511+08:00",
+        "kind": "start",
+        "version": "git version 2.34.1",
+        "criteria": [
+          "精确提交",
+          "原样保留原有暂存和工作树",
+          "子仓先于主仓",
+          "疑似越界先停受影响的提交"
+        ]
+      },
+      {
+        "at": "2026-11-18T09:59:27.053+08:00",
+        "kind": "baseline",
+        "parent": "7a6abbd4d78bf0f8e8441395c4e81c377366a4ee",
+        "child": "d4dedc4a71da70c17b7061ed14d96ff8c6ea7c1c",
+        "parent_user": {
+          "staged": "f734b16d0b41ccedd6a8bb8e74baabdb77d44cd3",
+          "worktree": "dbcacfcfdb1225378802bb8df93e0c3a9d76c06b70185115414584727a0442e8",
+          "staged_content": "user staged before team started",
+          "user_file": "user worktree before team started\n"
+        },
+        "child_user": {
+          "staged": "f734b16d0b41ccedd6a8bb8e74baabdb77d44cd3",
+          "worktree": "dbcacfcfdb1225378802bb8df93e0c3a9d76c06b70185115414584727a0442e8",
+          "staged_content": "user staged before team started",
+          "user_file": "user worktree before team started\n"
+        }
+      },
+      {
+        "at": "2026-11-18T09:59:27.176+08:00",
+        "kind": "hold",
+        "parent_staged": [
+          "integration.txt",
+          "user-staged.txt"
+        ],
+        "child_staged": [
+          "feature.txt",
+          "user-staged.txt"
+        ],
+        "parent": "7a6abbd4d78bf0f8e8441395c4e81c377366a4ee",
+        "child": "d4dedc4a71da70c17b7061ed14d96ff8c6ea7c1c",
+        "child_status": "M  feature.txt\nM  user-staged.txt\n M user-worktree.txt",
+        "parent_status": "M  integration.txt\n M modules/part\nM  user-staged.txt\n M user-worktree.txt",
+        "withheld": "plain git commit"
+      },
+      {
+        "at": "2026-11-18T10:00:02.673+08:00",
+        "kind": "child_committed",
+        "child": "23108d89d57d46cb1acf9f0ba8ff30fed84f08cf",
+        "commit_paths": [
+          "feature.txt"
+        ],
+        "staged": [
+          "user-staged.txt"
+        ],
+        "parent_head_still": "7a6abbd4d78bf0f8e8441395c4e81c377366a4ee",
+        "child_user": {
+          "staged": "f734b16d0b41ccedd6a8bb8e74baabdb77d44cd3",
+          "worktree": "dbcacfcfdb1225378802bb8df93e0c3a9d76c06b70185115414584727a0442e8",
+          "staged_content": "user staged before team started",
+          "user_file": "user worktree before team started\n"
+        }
+      },
+      {
+        "at": "2026-11-18T10:00:02.746+08:00",
+        "kind": "review_dirty_submodule",
+        "proposed": "160000 23108d89d57d46cb1acf9f0ba8ff30fed84f08cf 0\tmodules/part",
+        "parent_short": "diff --git a/modules/part b/modules/part\n--- a/modules/part\n+++ b/modules/part\n@@ -1 +1 @@\n-Subproject commit 23108d89d57d46cb1acf9f0ba8ff30fed84f08cf\n+Subproject commit 23108d89d57d46cb1acf9f0ba8ff30fed84f08cf-dirty",
+        "child_commit_paths": [
+          "feature.txt"
+        ],
+        "parent_head": "7a6abbd4d78bf0f8e8441395c4e81c377366a4ee"
+      },
+      {
+        "at": "2026-11-18T10:00:40.079+08:00",
+        "kind": "parent_committed",
+        "parent": "9285c9fe8a8bb1a15d0960741c2281e1afd8042c",
+        "child_pointer": "160000 commit 23108d89d57d46cb1acf9f0ba8ff30fed84f08cf\tmodules/part",
+        "commit_paths": [
+          "integration.txt",
+          "modules/part"
+        ],
+        "staged": [
+          "user-staged.txt"
+        ],
+        "parent_user": {
+          "staged": "f734b16d0b41ccedd6a8bb8e74baabdb77d44cd3",
+          "worktree": "dbcacfcfdb1225378802bb8df93e0c3a9d76c06b70185115414584727a0442e8",
+          "staged_content": "user staged before team started",
+          "user_file": "user worktree before team started\n"
+        },
+        "final_child": "M  user-staged.txt\n M user-worktree.txt",
+        "final_parent": "M modules/part\nM  user-staged.txt\n M user-worktree.txt"
+      }
+    ]
+  },
+  "version_change": {
+    "start": "2026-11-18T10:02:27.757317+08:00",
+    "workflow_sha256": "62cd1713cb0bccab58ef36a459029bf5a9a92b284d4284be47ceb61ec4e09674",
+    "sequence": [
+      {
+        "at": "2026-11-18T10:02:27.826454+08:00",
+        "task": "A",
+        "operation": "create",
+        "returncode": 0
+      },
+      {
+        "at": "2026-11-18T10:02:27.886222+08:00",
+        "task": "A",
+        "operation": "approve",
+        "returncode": 0
+      },
+      {
+        "at": "2026-11-18T10:02:27.946020+08:00",
+        "task": "A",
+        "operation": "transition",
+        "returncode": 0,
+        "result": "running"
+      },
+      {
+        "at": "2026-11-18T10:02:28.037867+08:00",
+        "task": "A",
+        "operation": "run-check",
+        "returncode": 0,
+        "outcome": "pass",
+        "id": "1bdb6f1aa6474974ae2f64aa0d07fae2",
+        "input_sha256": "45536fe03ca1b41f1b24a803e096d65eba4eba2d6b8bef9e32576278f845f55a"
+      },
+      {
+        "at": "2026-11-18T10:02:28.104900+08:00",
+        "task": "B",
+        "operation": "create",
+        "returncode": 0
+      },
+      {
+        "at": "2026-11-18T10:02:28.166609+08:00",
+        "task": "B",
+        "operation": "approve",
+        "returncode": 0
+      },
+      {
+        "at": "2026-11-18T10:02:28.223986+08:00",
+        "task": "B",
+        "operation": "transition",
+        "returncode": 0,
+        "result": "running"
+      },
+      {
+        "at": "2026-11-18T10:02:28.314708+08:00",
+        "task": "B",
+        "operation": "run-check",
+        "returncode": 0,
+        "outcome": "pass",
+        "id": "e429625f69d640679e0121af4f177bdc",
+        "input_sha256": "f91b4a89b4e5a0492a7cde13a9e8a2cf63bc87e2457bb512f6fe296492473813"
+      },
+      {
+        "at": "2026-11-18T10:02:28.375005+08:00",
+        "task": "A",
+        "operation": "transition",
+        "returncode": 0,
+        "result": "complete"
+      },
+      {
+        "at": "2026-11-18T10:02:28.434662+08:00",
+        "task": "A",
+        "operation": "status",
+        "returncode": 0,
+        "effective_status": "complete",
+        "errors": []
+      },
+      {
+        "at": "2026-11-18T10:02:28.492020+08:00",
+        "task": "B",
+        "operation": "status",
+        "returncode": 0,
+        "effective_status": "running",
+        "errors": []
+      },
+      {
+        "at": "2026-11-18T10:02:28.561019+08:00",
+        "task": "A",
+        "operation": "status",
+        "returncode": 0,
+        "effective_status": "needs_revalidation",
+        "errors": [
+          "check-format 证据版本失效",
+          "check-format 缺少真实成功命令结果"
+        ]
+      },
+      {
+        "at": "2026-11-18T10:02:28.620697+08:00",
+        "task": "B",
+        "operation": "status",
+        "returncode": 0,
+        "effective_status": "running",
+        "errors": []
+      },
+      {
+        "at": "2026-11-18T10:02:28.688368+08:00",
+        "task": "B",
+        "operation": "transition",
+        "returncode": 0,
+        "result": "complete"
+      },
+      {
+        "at": "2026-11-18T10:02:28.748540+08:00",
+        "task": "B",
+        "operation": "status",
+        "returncode": 0,
+        "effective_status": "complete",
+        "errors": []
+      },
+      {
+        "at": "2026-11-18T10:02:28.811304+08:00",
+        "task": "A",
+        "operation": "transition",
+        "returncode": 0,
+        "result": "paused"
+      },
+      {
+        "at": "2026-11-18T10:02:28.869491+08:00",
+        "task": "A",
+        "operation": "transition",
+        "returncode": 0,
+        "result": "running"
+      },
+      {
+        "at": "2026-11-18T10:02:28.927710+08:00",
+        "task": "A",
+        "operation": "transition",
+        "returncode": 2,
+        "result": "{\"ok\": false, \"error\": \"不能完成：check-format 证据版本失效；check-format 缺少真实成功命令结果\"}"
+      },
+      {
+        "at": "2026-11-18T10:02:29.027001+08:00",
+        "task": "A",
+        "operation": "run-check",
+        "returncode": 0,
+        "outcome": "pass",
+        "id": "7f2bff283a3d4de5afae6e89841337bd",
+        "input_sha256": "0d571dc3dee80b74bf953a542db87200d44190c62d0426a8c99b8576b711cbee"
+      },
+      {
+        "at": "2026-11-18T10:02:29.086398+08:00",
+        "task": "A",
+        "operation": "transition",
+        "returncode": 0,
+        "result": "complete"
+      },
+      {
+        "at": "2026-11-18T10:02:29.142739+08:00",
+        "task": "A",
+        "operation": "status",
+        "returncode": 0,
+        "effective_status": "complete",
+        "errors": []
+      }
+    ],
+    "end": "2026-11-18T10:02:29.142803+08:00",
+    "counts": {
+      "A_execution": 2,
+      "B_execution": 1
+    }
+  },
+  "relative_path_baseline": {
+    "version": "0.2.0-rc.2",
+    "relative_exit": 1,
+    "relative_err": "ValueError: 'records/state-evidence/568d3ff388bd4a149e0d2c0015170bea.log' is not in the subpath of '/tmp/hutools-behavior-3eqvVajs/path-case' OR one path is relative and the other is absolute.",
+    "relative_evidence_count": 0,
+    "new_unregistered_logs": {
+      "568d3ff388bd4a149e0d2c0015170bea.log": "check-executed\n"
+    },
+    "absolute_exit": 0,
+    "absolute_evidence_count": 1,
+    "absolute_id": "da7c844354be48cf8721bf29a7876574"
+  },
+  "observation": {
+    "scope": "Q18 latest isolated Git trial only",
+    "start": "2026-11-18T09:59:26.511+08:00",
+    "end": "2026-11-18T10:00:40.079+08:00",
+    "elapsed_seconds": 73.568,
+    "quality": {
+      "expected_commits": 2,
+      "unrelated_paths_in_either_commit": 0,
+      "user_blobs_preserved_in_both": true,
+      "known_out_of_scope": "no field feedback observed during this fixture"
+    },
+    "user_burden": {
+      "additional_user_clarification": 0,
+      "user_rescue": 0,
+      "automatic_host_command_reviews_billed_separately": "count not used as user interactions"
+    },
+    "time": {
+      "elapsed_seconds": 73.568,
+      "raw_fragments": [
+        {
+          "at": "2026-11-18T02:04:22.180596+00:00",
+          "type": "fragment",
+          "id": "ea19c0be43814c869db9420e357420dc",
+          "role": "tester",
+          "actor": "behavior_trials",
+          "kind": "work",
+          "started_at": "2026-11-18T09:59:26.511+08:00",
+          "ended_at": "2026-11-18T09:59:27.176+08:00",
+          "reason": "构建隔离父子仓并检查原有索引，识别混入风险",
+          "source": "caller-observation",
+          "artifact": "records/A/git-observation.json",
+          "artifact_sha256": "3cd66e213faeb1f3ca41211f9501cec8ea1d4ef7feb8b5a1ff1aced3aae684e1"
+        },
+        {
+          "at": "2026-11-18T02:04:22.240510+00:00",
+          "type": "fragment",
+          "id": "9ec21ddd8ce249a699fbcb87f02323bf",
+          "role": "tester",
+          "actor": "behavior_trials",
+          "kind": "work",
+          "started_at": "2026-11-18T09:59:27.176+08:00",
+          "ended_at": "2026-11-18T10:00:02.746+08:00",
+          "reason": "暂停全索引提交，按精确文件完成子仓检查并提交；保存原有用户差异",
+          "source": "caller-observation",
+          "artifact": "records/A/git-observation.json",
+          "artifact_sha256": "3cd66e213faeb1f3ca41211f9501cec8ea1d4ef7feb8b5a1ff1aced3aae684e1"
+        },
+        {
+          "at": "2026-11-18T02:04:22.302818+00:00",
+          "type": "fragment",
+          "id": "0b3dccf75b5742b5a9db0b179bc3dd65",
+          "role": "tester",
+          "actor": "behavior_trials",
+          "kind": "work",
+          "started_at": "2026-11-18T10:00:02.746+08:00",
+          "ended_at": "2026-11-18T10:00:40.079+08:00",
+          "reason": "向经理核实 dirty 疑点并收到回执，精确提交父仓与校验结果。时段含通信和独立阅读，未归为纯等待",
+          "source": "caller-observation",
+          "artifact": "records/A/git-observation.json",
+          "artifact_sha256": "3cd66e213faeb1f3ca41211f9501cec8ea1d4ef7feb8b5a1ff1aced3aae684e1"
+        }
+      ],
+      "pure_wait_or_rework_time": "not separately measurable on recorded boundaries"
+    },
+    "coordination": {
+      "actual_parent_doubt_and_release": 1,
+      "child_commit_sequence": 2,
+      "token_and_model_cost": "not measured",
+      "no_speed_comparison": true
+    },
+    "failed_attempt": "before measured sample began, default sandbox refused to open /tmp trial.py; scope-reviewed retry launched successfully",
+    "raw_proof": "3cd66e213faeb1f3ca41211f9501cec8ea1d4ef7feb8b5a1ff1aced3aae684e1"
+  },
+  "review_of_proposals": "# Q25 隔离决策试行\n\n2026-11-18，本轮经理给出六个模拟提案，由独立测试者裁决。以下决定针对这些提案。产品工作区使用 d900c85，当前已安装 workflow.py 的 SHA-256 为 62cd1713cb0bccab58ef36a459029bf5a9a92b284d4284be47ceb61ec4e09674，与该提交一致。\n\n| 提案 | 评审决定和现有依据 | 再推进条件 |\n| --- | --- | --- |\n| “行业常用”，将通用入口改成数据库 | 退回。B02 保留一个项目任务状态文件、独占锁和版本化证据。该提案没有指出哪项用户操作受到阻塞，也没有给出部署或数据迁移成本。 | 定位现有流程无法满足的负载或恢复要求，用真实工程条件比较可选实现及兼容成本。 |\n| 一次小样例波动后设立 100ms 发布门 | 退回。缺少已确认时延要求、可比测量条件及用户影响。Q24 对低影响观察项规定有界核查。 | 核查环境与复现条件；发现稳定退化或明确的服务目标后提出相称阈值。 |\n| 把无状态字符串拼接封装成单方法常驻类 | 退回。提案中没有共享状态、需要统一释放的资源或新增消费者契约，已有纯函数足以表达。 | 明确新增接口的实际调用者，或说明必须协调的状态、资源及寿命。 |\n| 源码输入变化后沿用上一版测试签署 | 拒绝。A/B 隔离试验更改 A 单一输入后，旧验收转为 needs_revalidation，强行用旧证据完成返回 2；未受影响的 B 可继续完成。 | 对受影响版本重新执行检查，按新输入指纹关联证据并复核最终状态。 |\n| 输入与错误相同，连续重试十轮 | 停止重复计划。提案没有新的输入、观察或能区分候选根因的假设。 | 记录原错和范围，找出能区分原因的条件，明确新的复查点和停止条件。 |\n| 修复相对任务路径导致检查执行后证据未登记 | 支持进入最小修复及回归。已安装 rc.2 的相对路径调用退出 1，日志输出 check-executed，状态证据为 0；绝对路径对照退出 0 且登记 1 次。 | CLI 边界处理路径，一份相对/绝对对照验证每次恰好执行一次并正确关联。保留原绝对路径、拒绝路径、其他参数和历史失败语义；复核通过后再交付。 |\n\n实际 CLI 证据见同目录 workflow-evidence.json 和 path-case-evidence.json。数据库、性能门、空类和重复重试四案只进行了提案评审。\n",
+  "writer_observation": {
+    "events": [
+      {
+        "at": "2026-11-18T10:05:02.511603+08:00",
+        "state": "writer actually live",
+        "poll": null,
+        "dispatched_duplicates": 0
+      },
+      {
+        "at": "2026-11-18T10:05:02.511926+08:00",
+        "state": "independent acceptance evidence read while waiting",
+        "poll": null,
+        "dispatched_duplicates": 0
+      },
+      {
+        "at": "2026-11-18T10:05:02.515183+08:00",
+        "state": "original process observed terminal; result confirmed",
+        "exit": 0,
+        "writes_seen": 1
+      }
+    ],
+    "scope": "real subprocess in fixture; not a Codex agent reconnection"
+  }
+}
