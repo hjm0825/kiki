@@ -5,6 +5,8 @@ description: 在 HuTools 中讨论工程需求或重要方案，并将已确认�
 
 # grill-with-docs
 
+每次启用本技能时，主代理立即向用户报告技能全名和用途；子代理立即报给经理，由经理转达。
+
 先读[共同规则](../hutools/references/rules.md)。使用 [grilling](../grilling/SKILL.md) 澄清当前可决定的问题；存在术语歧义时使用 [domain-modeling](../domain-modeling/SKILL.md)。
 
 涉及设计时按[用户设计方案](../hutools/references/development.md#用户设计方案)从使用场景展开，持续更新同一份可评审方案。

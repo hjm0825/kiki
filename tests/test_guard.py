@@ -76,9 +76,28 @@ class GuardTests(unittest.TestCase):
             p=dict(self.policy);p[key]=value
             self.assertTrue(self.denied(self.call(),p))
 
-    def test_no_binding_reports_inactive_not_enforced(self):
-        result=self.g.evaluate(self.call(),None)
+    def test_no_binding_reports_inactive_at_session_start(self):
+        result=self.g.evaluate({'hook_event_name': 'SessionStart'}, None)
         self.assertIn('未绑定',json.dumps(result,ensure_ascii=False))
+        self.assertEqual({}, self.g.evaluate(self.call('request_user_input_async'), None))
+        self.assertIn('高风险', self.g.evaluate(self.call(), None)['hookSpecificOutput']['additionalContext'])
+    def test_native_input_cards_reach_host_in_active_modes(self):
+        questions = {'questions': [{'title': '请选择本次任务', 'options': ['开发功能', '分析问题', '其他咨询']}]}
+        for mode in ('approved', 'read_only'):
+            policy = dict(self.policy, mode=mode)
+            for tool in ('request_user_input', 'request_user_input_async',
+                         'functions.request_user_input', 'functions.request_user_input_async'):
+                with self.subTest(mode=mode, tool=tool):
+                    self.assertEqual({}, self.g.evaluate(self.call(tool, questions), policy))
+    def test_card_exception_does_not_extend_execution_permissions(self):
+        for name in ('mcp__other__request_user_input_async', 'functions.request_user_input_async.extra',
+                     'functions.exec', 'send_message_to_user_async'):
+            with self.subTest(tool=name):
+                self.assertTrue(self.denied(self.call(name)))
+        card = self.call('request_user_input_async')
+        self.assertTrue(self.denied(card, dict(self.policy, mode='paused')))
+        self.assertTrue(self.denied(card, dict(self.policy, expires_at='2000-01-01T00:00:00+00:00')))
+        self.assertTrue(self.denied(self.call('request_user_input_async', {'sandbox_permissions':'require_escalated'})))
     def test_unrelated_project_is_not_affected(self):
         other=Path(self.tmp.name)/'other';other.mkdir()
         self.assertEqual({},self.g.evaluate(self.call(cwd=other),self.policy))

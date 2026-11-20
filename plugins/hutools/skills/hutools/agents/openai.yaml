@@ -1,4 +1,4 @@
 interface:
   display_name: "HuTools"
   short_description: "从运行开始引导需求讨论、源码日志分析和咨询，输出清晰中文报告"
-  default_prompt: "使用 $hutools 运行工程团队，按当前目标开始引导。"
+  default_prompt: "使用 $hutools 运行工程团队，用宿主提问工具打开启动选项卡。"

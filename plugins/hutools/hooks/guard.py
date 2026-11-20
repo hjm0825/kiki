@@ -10,6 +10,8 @@ import sys
 
 PLUGIN = Path(__file__).resolve().parents[1]
 MAX_INPUT = 1024 * 1024
+INPUT_CARDS = {'request_user_input', 'request_user_input_async',
+               'functions.request_user_input', 'functions.request_user_input_async'}
 
 
 def rules_digest():
@@ -115,7 +117,12 @@ def evaluate(event, policy):
     if name not in {'PreToolUse', 'SessionStart', 'Stop'}:
         return {}
     if policy is None:
-        return context('HuTools 未绑定执行策略：保护未启用。先确认资料库与任务；高风险执行须完成宿主保护核验。', name) if name != 'Stop' else {}
+        inactive = 'HuTools 未绑定执行策略，保护未启用。高风险执行须完成宿主保护核验。'
+        if name == 'SessionStart':
+            return context(inactive + '用户选择 HuTools 并输入“运行”时，按入口技能调用宿主提问卡。', name)
+        if name == 'PreToolUse' and event.get('tool_name') not in INPUT_CARDS:
+            return context(inactive, name)
+        return {}
     try:
         if not isinstance(policy, dict) or policy.get('schema_version') != 1:
             raise ValueError('不支持的策略版本')
@@ -175,6 +182,9 @@ def evaluate(event, policy):
             raise ValueError('工具参数必须是对象')
         if args.get('sandbox_permissions') == 'require_escalated':
             raise ValueError('策略不授予沙箱升级权限；交宿主独立审批')
+        # 原生提问只收集本轮答复，工具可用性及答复后的操作仍由宿主核定。
+        if tool in INPUT_CARDS:
+            return {}
         if tool in {'write_stdin', 'exec', 'js', 'functions.exec'}:
             raise ValueError('持续会话/嵌套执行入口不能由一次批准覆盖')
         if tool in {'apply_patch', 'Edit', 'Write'}:

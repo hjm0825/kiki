@@ -1,6 +1,6 @@
 {
   "name": "hutools",
-  "version": "0.2.0-rc.7",
+  "version": "0.2.0-rc.8",
   "description": "HuTools 工程协作：轻量接入、研发闭环、独立验证、资料管理与受控调用检查。",
   "author": {
     "name": "hjm0825"
@@ -25,7 +25,7 @@
       "Write"
     ],
     "defaultPrompt": [
-      "运行 HuTools",
+      "运行 HuTools，打开启动选项卡",
       "用 HuTools 分析项目问题",
       "用 HuTools 讨论开发需求"
     ]

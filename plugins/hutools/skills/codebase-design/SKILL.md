@@ -5,6 +5,8 @@ description: 为 HuTools 的功能设计和架构分析明确模块职责、接�
 
 # codebase-design
 
+每次启用本技能时，主代理立即向用户报告技能全名和用途；子代理立即报给经理，由经理转达。
+
 先读[共同规则](../hutools/references/rules.md)。查看当前模块及真实调用者，沿项目领域术语描述设计。
 
 对外设计沿[用户设计方案](../hutools/references/development.md#用户设计方案)交付。把下面的架构取舍写进技术记录；影响实际用法或部署的取舍，用一个使用实例带回用户方案。

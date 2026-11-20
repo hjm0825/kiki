@@ -49,7 +49,7 @@ python3 /已安装插件根/hooks/guard.py --rules-digest
 python3 /已安装插件根/hooks/guard.py --fingerprint < call.json
 ```
 
-补丁只允许 write_paths 内的精确文件；拒绝 `..`、符号链接、硬链接文件和控制配置目录。删除须在 delete_paths；移动同时核对写入目标和删除源。非补丁调用须精确列入 approved_calls，未知调用拒绝；有意拒绝 write_stdin 与顶层嵌套执行入口，但宿主绕过 hook 的入口仍由宿主负责保护。不要为了运行构建把任意 shell 或脚本自动视为安全。
+补丁只允许 write_paths 内的精确文件；拒绝 `..`、符号链接、硬链接文件和控制配置目录。删除须在 delete_paths；移动同时核对写入目标和删除源。有效 read_only 或 approved 策略下，宿主原生 `request_user_input_async`、`request_user_input`（含 `functions.` 全名）可直接询问用户。答复后的执行仍逐项核对。其他非补丁调用须精确列入 approved_calls，未知调用拒绝；有意拒绝 write_stdin 与顶层嵌套执行入口，但宿主绕过 hook 的入口仍由宿主负责保护。不要为了运行构建把任意 shell 或脚本自动视为安全。
 
 ## 交付与失败
 
